@@ -28,4 +28,13 @@ public class LibreriaDataService {
     public ArrayList<Libreria> readAll(){
         return l.readAll(miSession);
     }
+    public List<String> readTipos(){
+        return l.readTipos(miSession);
+    }
+    public ArrayList<Libreria>  find(String cb, String tf){
+        if(tf == null || tf.equals("")){
+            return l.readAll(miSession);
+        }
+        return l.find(miSession, cb, tf);
+    }
 }

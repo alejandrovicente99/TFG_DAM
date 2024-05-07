@@ -5,6 +5,7 @@ import ORM.Libreria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +69,42 @@ public class LibreriaDAOImpl implements LibreriaDAO {
     @Override
     public ArrayList<Libreria> readAll(Session session) {
         try{
-
             List<Libreria> libreria = session.createQuery("FROM Libreria", Libreria.class).getResultList();
 
+            ArrayList<Libreria> librerias = new ArrayList<>(libreria);
+
+            return librerias;
+        } catch (Exception ignored) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> readTipos(Session session) {
+        try{
+            List<String> tipos = session.createQuery("Select distinct tipo from Libreria").getResultList();
+
+            return tipos;
+        } catch (Exception ignored) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Libreria>  find(Session session, String cb, String tf) {
+        String tipo = "";
+        try{
+            switch(cb){
+                case "Nombre": tipo = "nombre";break;
+                case "Tipo": tipo = "tipo";break;
+                case "Fecha fin": tipo = "fechaFin";break;
+                case "Puntuacion": tipo = "puntuacion";break;
+            }
+            Query query = session.createQuery("FROM Libreria  WHERE " + tipo + " = :tf");
+            query.setParameter("tf", tf);
+            List<Libreria> libreria = query.list();
             ArrayList<Libreria> librerias = new ArrayList<>(libreria);
 
             return librerias;

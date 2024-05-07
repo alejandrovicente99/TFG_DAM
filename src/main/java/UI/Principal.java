@@ -8,7 +8,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Principal extends JFrame{
     private org.hibernate.Session session = HibernateUtil.getSessionFactory().openSession();
@@ -16,27 +19,29 @@ public class Principal extends JFrame{
     private JPanel panelMenu;
     private JTabbedPane tab;
     private JPanel home;
-    private JPanel top;
+    private JPanel Prueba_fallida;
     private JButton btTop;
     private JButton btTipo;
     private JButton btHome;
     private JScrollPane scrollPane;
     private JTable homeTable;
-    private JTextField tfNombre;
-    private JTextField tfTipo;
-    private JTextField tfFecha;
-    private JTextField tfPuntuacion;
-    private JPanel pn1;
-    private JPanel pn2;
-    private JPanel pn3;
-    private JPanel pn4;
-    private JPanel pn5;
-    private JPanel pn6;
-    private JPanel pn7;
-    private JPanel pn8;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JButton button1;
+    private JButton button2;
+    private JTextField tfSearch;
+    private JComboBox cbSearch;
 
     public Principal(){
-        generarTabla();
+        LibreriaDataService l = new LibreriaDataService(session);
+        ArrayList<Libreria> listaLibrerias = l.readAll();
+
+        generarTabla(listaLibrerias);
+        cargarComboBox();
+        cargarcbSearch();
+
         btHome.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,26 +54,55 @@ public class Principal extends JFrame{
                 tab.setSelectedIndex(1);
             }
         });
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    actualizarTabla(l.find(cbSearch.getSelectedItem().toString().trim(), tfSearch.getText().trim()));
+                }
+            }
+        });
     }
 
-    public void generarTabla(){
-        LibreriaDataService l = new LibreriaDataService(session);
-        ArrayList<Libreria> listaLibrerias = l.readAll();
+    public void generarTabla(ArrayList<Libreria> listaLibrerias){
         DefaultTableModel modeloTabla = (DefaultTableModel) homeTable.getModel();
 
         modeloTabla.setRowCount(0);
 
         modeloTabla.addColumn("Nombre");
         modeloTabla.addColumn("Tipo");
-        modeloTabla.addColumn("Fecha-Fin");
+        modeloTabla.addColumn("Fecha Fin");
         modeloTabla.addColumn("Puntuacion");
-        for(int i = 0; i < 50; i++) {
-            for (Libreria libreria : listaLibrerias) {
-                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
-                modeloTabla.addRow(fila);
-            }
+        for (Libreria libreria : listaLibrerias) {
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
+            modeloTabla.addRow(fila);
         }
 
         modeloTabla.fireTableDataChanged();
+    }
+    public void actualizarTabla(ArrayList<Libreria> listaLibrerias){
+        DefaultTableModel modeloTabla = (DefaultTableModel) homeTable.getModel();
+
+        modeloTabla.setRowCount(0);
+
+        for (Libreria libreria : listaLibrerias) {
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
+            modeloTabla.addRow(fila);
+        }
+
+        modeloTabla.fireTableDataChanged();
+    }
+    public void cargarComboBox(){
+        LibreriaDataService l = new LibreriaDataService(session);
+        List<String> tipos = l.readTipos();
+
+        //cbSearch.setModel(new DefaultComboBoxModel(tipos.toArray()));
+    }
+    public void cargarcbSearch(){
+        cbSearch.removeAllItems();
+        cbSearch.addItem("Nombre");
+        cbSearch.addItem("Tipo");
+        cbSearch.addItem("Fecha fin");
+        cbSearch.addItem("Puntuacion");
     }
 }
