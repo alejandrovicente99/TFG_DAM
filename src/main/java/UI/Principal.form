@@ -99,7 +99,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="34515" binding="principal" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="34515" binding="home" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Untitled"/>
             </constraints>
@@ -107,7 +107,14 @@
               <background color="-1729650"/>
             </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="725f6" class="javax.swing.JTable" binding="homeTable">
+                <constraints>
+                  <card name="Card1"/>
+                </constraints>
+                <properties/>
+              </component>
+            </children>
           </grid>
           <grid id="83d0a" binding="top" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>

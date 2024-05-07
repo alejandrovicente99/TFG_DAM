@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibreriaDataService {
@@ -23,5 +24,8 @@ public class LibreriaDataService {
         }
         l.create(libreria, miSession);
         return "Objeto añadido";
+    }
+    public ArrayList<Libreria> readAll(){
+        return l.readAll(miSession);
     }
 }

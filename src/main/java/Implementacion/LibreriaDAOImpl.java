@@ -5,8 +5,8 @@ import ORM.Libreria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibreriaDAOImpl implements LibreriaDAO {
@@ -66,34 +66,17 @@ public class LibreriaDAOImpl implements LibreriaDAO {
     }
 
     @Override
-    public String readAll(Session session) {
-        /*try{
-            String lista = "";
+    public ArrayList<Libreria> readAll(Session session) {
+        try{
 
-            try {
-                List<Libreria> libreria = session.createQuery("FROM Libreria", Libreria.class).getResultList();
+            List<Libreria> libreria = session.createQuery("FROM Libreria", Libreria.class).getResultList();
 
-                if (libreria.isEmpty()) {
-                    lista = "No hay empleados registrados en la base de datos.";
-                } else {
-                    lista = lista + "Lista de todos los empleados:\n";
-                    for (Libreria libreria1 : libreria) {
-                        Query query1 = session.createQuery("SELECT nomDepto FROM Departamento  WHERE idDepto = :idDepartamento");
-                        query1.setParameter("idDepartamento", empleado.getDepartamentos().getIdDepto());
-                        List<Integer> resultado1 = query1.list();
+            ArrayList<Libreria> librerias = new ArrayList<>(libreria);
 
-                        EmpleadosDatosProf empleado1 = session.get(EmpleadosDatosProf.class, empleado.getDni());
+            return librerias;
+        } catch (Exception ignored) {
 
-                        lista += "-DNI: " + empleado.getDni() + " -Nombre: " + empleado.getNombre() + " -Departamento: " +  resultado1.get(0) + " -Salario: " + empleado1.getSalario() + "\n";
-                    }
-                }
-            } catch (Exception e) {
-                return "Error al leer";
-            }
-            return lista;
-        } catch (Exception e) {
-            return "Error al leer";
-        }*/
+        }
         return null;
     }
 }
