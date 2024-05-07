@@ -3,7 +3,6 @@ package UI;
 import ORM.Libreria;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
-import com.mysql.cj.Session;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +20,20 @@ public class Principal extends JFrame{
     private JButton btTop;
     private JButton btTipo;
     private JButton btHome;
+    private JScrollPane scrollPane;
     private JTable homeTable;
+    private JTextField tfNombre;
+    private JTextField tfTipo;
+    private JTextField tfFecha;
+    private JTextField tfPuntuacion;
+    private JPanel pn1;
+    private JPanel pn2;
+    private JPanel pn3;
+    private JPanel pn4;
+    private JPanel pn5;
+    private JPanel pn6;
+    private JPanel pn7;
+    private JPanel pn8;
 
     public Principal(){
         generarTabla();
@@ -50,14 +62,13 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha-Fin");
         modeloTabla.addColumn("Puntuacion");
-
-        // Iterar sobre los elementos del ArrayList y agregar cada elemento como una fila al modelo de tabla
-        for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
-            modeloTabla.addRow(fila);
+        for(int i = 0; i < 50; i++) {
+            for (Libreria libreria : listaLibrerias) {
+                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
+                modeloTabla.addRow(fila);
+            }
         }
 
-        // Crear un JTable con el modelo de tabla
         modeloTabla.fireTableDataChanged();
     }
 }
