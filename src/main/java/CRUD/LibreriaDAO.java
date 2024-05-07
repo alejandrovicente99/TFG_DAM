@@ -7,5 +7,4 @@ public interface LibreriaDAO<T> {
     String delete(T entity, Session session);
     String update(T entity, Session session);
     String readAll(Session session);
-
 }

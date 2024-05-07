@@ -15,6 +15,12 @@ public class LibreriaDataService {
     private Session miSession;
     LibreriaDAOImpl l = new LibreriaDAOImpl();
     public String Guardar(Libreria libreria) {
+        if(libreria.getNombre() == null || libreria.getNombre().equals("")){
+            return "El nombre no puede ser vacio";
+        }
+        if(libreria.getFechaFin() == null || libreria.getFechaFin().equals("")){
+            return "El fecha de fin no puede ser vacio";
+        }
         l.create(libreria, miSession);
         return "Objeto añadido";
     }
