@@ -43,4 +43,7 @@ public class LibreriaDataService {
         }
         return l.findByType(miSession, tipo);
     }
+    public int ranking(String nombre){
+        return l.ranking(nombre, miSession);
+    }
 }

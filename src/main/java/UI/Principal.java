@@ -16,6 +16,8 @@ import java.util.List;
 public class Principal extends JFrame{
     private org.hibernate.Session session = HibernateUtil.getSessionFactory().openSession();
     private LibreriaDataService l = new LibreriaDataService(session);
+    private Scrap.Scrap s = new Scrap.Scrap();
+    private Individual i = new Individual(session);
 
 
     public JPanel panelMain;
@@ -44,6 +46,15 @@ public class Principal extends JFrame{
     private JTextField tfAnyadirEnlace;
     private JTable tbAnyadir;
     private JButton btAceptarAnyadir;
+    private JPanel Individual;
+    private JLabel laImagen;
+    private JPanel pnImagen;
+    private JLabel laNombre;
+    private JLabel laTipo;
+    private JLabel laFecha;
+    private JLabel laRanking;
+    private JLabel laMetacritic;
+    private JLabel laPuntuacion;
 
     public Principal(){
         //LibreriaDataService l = new LibreriaDataService(session);
@@ -132,8 +143,9 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha Fin");
         modeloTabla.addColumn("Puntuacion");
+
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion()};
             modeloTabla.addRow(fila);
         }
         modeloTabla.fireTableDataChanged();
@@ -287,5 +299,9 @@ public class Principal extends JFrame{
         for(int i = 1; i < 29; i++){
             cbAnyadirDia.addItem(i);
         }
+    }
+    //Scrapping
+    public String puntuacionMetacritic(String url){
+        return s.webScrap(url).get(0);
     }
 }

@@ -128,4 +128,18 @@ public class LibreriaDAOImpl implements LibreriaDAO {
         }
         return null;
     }
+
+    @Override
+    public int ranking(String nombre, Session session) {
+        try{
+            Query query = session.createQuery("select nombre FROM Libreria order by puntuacion desc");
+            query.setParameter("nombre", nombre);
+            List<Libreria> libreria = query.list();
+            ArrayList<Libreria> librerias = new ArrayList<>(libreria);
+            return librerias.indexOf(nombre) + 1;
+        } catch (Exception ignored) {
+
+        }
+        return 0;
+    }
 }
