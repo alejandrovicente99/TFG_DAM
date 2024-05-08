@@ -19,20 +19,28 @@ public class Principal extends JFrame{
     private JPanel panelMenu;
     private JTabbedPane tab;
     private JPanel home;
-    private JPanel Prueba_fallida;
     private JButton btTop;
     private JButton btTipo;
     private JButton btHome;
     private JScrollPane scrollPane;
     private JTable homeTable;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JButton button1;
-    private JButton button2;
     private JTextField tfSearch;
     private JComboBox cbSearch;
+    private JPanel anyadir;
+    private JButton btAnyadir;
+    private JTextField tfAnyadirNombre;
+    private JComboBox cbAnyadirTipo;
+    private JComboBox cbAnyadirAnyo;
+    private JComboBox cbAnyadirMes;
+    private JComboBox cbAnyadirDia;
+    private JTextField tfAnyadirPuntuacion;
+    private JPanel pnNombre;
+    private JPanel pnTipo;
+    private JPanel pnFecha;
+    private JPanel pnPuntuacion;
+    private JTextField tfAnyadirEnlace;
+    private JTable tbAnyadir;
+    private JButton btAceptarAnyadir;
 
     public Principal(){
         LibreriaDataService l = new LibreriaDataService(session);
@@ -48,10 +56,16 @@ public class Principal extends JFrame{
                 tab.setSelectedIndex(0);
             }
         });
-        btTop.addActionListener(new ActionListener() {
+        btAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tab.setSelectedIndex(1);
+            }
+        });
+        btTop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tab.setSelectedIndex(2);
             }
         });
         tfSearch.addKeyListener(new KeyAdapter() {
@@ -77,7 +91,6 @@ public class Principal extends JFrame{
             Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
             modeloTabla.addRow(fila);
         }
-
         modeloTabla.fireTableDataChanged();
     }
     public void actualizarTabla(ArrayList<Libreria> listaLibrerias){
