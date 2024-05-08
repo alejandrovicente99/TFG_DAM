@@ -17,7 +17,9 @@ public class Principal extends JFrame{
     private org.hibernate.Session session = HibernateUtil.getSessionFactory().openSession();
     private LibreriaDataService l = new LibreriaDataService(session);
     private Scrap.Scrap s = new Scrap.Scrap();
-    private Individual i = new Individual(session);
+    //private Individual i = new Individual(session);
+    private Scrap.Extract_imdb ei = new Scrap.Extract_imdb();
+    private Scrap.Extract_metacritic em = new Scrap.Extract_metacritic();
 
 
     public JPanel panelMain;
@@ -114,7 +116,7 @@ public class Principal extends JFrame{
                 mes = cbAnyadirMes.getSelectedItem().toString().trim();
                 dia = cbAnyadirDia.getSelectedItem().toString().trim();
                 puntuacion = tfAnyadirPuntuacion.getText().trim();
-                enlace = tfAnyadirEnlace.getText().trim();
+                enlace = null;
 
                 anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion, enlace);
                 actualizarTablaAnyadir(l.readAll());
@@ -143,10 +145,17 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha Fin");
         modeloTabla.addColumn("Puntuacion");
+        modeloTabla.addColumn("IMDB/Metacritic");
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion()};
-            modeloTabla.addRow(fila);
+            if(libreria.getTipo().equalsIgnoreCase("pelicula")) {
+                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), ei.puntuacionIMDB(libreria.getNombre())};
+                modeloTabla.addRow(fila);
+            }
+            if(libreria.getTipo().equalsIgnoreCase("videojuego")) {
+                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), em.puntuacionMetacritic(libreria.getNombre())};
+                modeloTabla.addRow(fila);
+            }
         }
         modeloTabla.fireTableDataChanged();
     }
@@ -168,8 +177,14 @@ public class Principal extends JFrame{
         modeloTabla.setRowCount(0);
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
-            modeloTabla.addRow(fila);
+            if(libreria.getTipo().equalsIgnoreCase("pelicula")) {
+                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), ei.puntuacionIMDB(libreria.getNombre())};
+                modeloTabla.addRow(fila);
+            }
+            if(libreria.getTipo().equalsIgnoreCase("videojuego")) {
+                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), em.puntuacionMetacritic(libreria.getNombre())};
+                modeloTabla.addRow(fila);
+            }
         }
 
         modeloTabla.fireTableDataChanged();
