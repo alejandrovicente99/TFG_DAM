@@ -12,4 +12,5 @@ public interface LibreriaDAO<T> {
     ArrayList<T> readAll(Session session);
     List<String> readTipos(Session session);
     ArrayList<T> find(Session session, String cb, String tf);
+    ArrayList<T> findByType(Session session, String tipo);
 }

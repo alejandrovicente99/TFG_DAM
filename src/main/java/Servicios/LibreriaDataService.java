@@ -31,10 +31,16 @@ public class LibreriaDataService {
     public List<String> readTipos(){
         return l.readTipos(miSession);
     }
-    public ArrayList<Libreria>  find(String cb, String tf){
+    public ArrayList<Libreria> find(String cb, String tf){
         if(tf == null || tf.equals("")){
             return l.readAll(miSession);
         }
         return l.find(miSession, cb, tf);
+    }
+    public ArrayList<Libreria> findByType(String tipo){
+        if(tipo == null || tipo.equals("")){
+            return l.readAll(miSession);
+        }
+        return l.findByType(miSession, tipo);
     }
 }

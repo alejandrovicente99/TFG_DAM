@@ -113,4 +113,19 @@ public class LibreriaDAOImpl implements LibreriaDAO {
         }
         return null;
     }
+
+    @Override
+    public ArrayList<Libreria> findByType(Session session, String tipo) {
+        try{
+            Query query = session.createQuery("FROM Libreria  WHERE tipo = :tipo");
+            query.setParameter("tipo", tipo);
+            List<Libreria> libreria = query.list();
+            ArrayList<Libreria> librerias = new ArrayList<>(libreria);
+
+            return librerias;
+        } catch (Exception ignored) {
+
+        }
+        return null;
+    }
 }
