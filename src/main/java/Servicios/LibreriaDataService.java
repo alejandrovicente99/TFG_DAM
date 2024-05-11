@@ -46,4 +46,8 @@ public class LibreriaDataService {
     public int ranking(String nombre){
         return l.ranking(nombre, miSession);
     }
+    public String update(Libreria libreria){
+        l.update(libreria, miSession);
+        return "Hecho";
+    }
 }

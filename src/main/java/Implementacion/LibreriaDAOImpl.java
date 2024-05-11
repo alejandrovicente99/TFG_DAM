@@ -93,7 +93,7 @@ public class LibreriaDAOImpl implements LibreriaDAO {
     }
 
     @Override
-    public ArrayList<Libreria>  find(Session session, String cb, String tf) {
+    public ArrayList<Libreria> find(Session session, String cb, String tf) {
         String tipo = "";
         try{
             switch(cb){

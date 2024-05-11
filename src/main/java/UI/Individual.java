@@ -5,7 +5,7 @@ import Servicios.LibreriaDataService;
 import org.hibernate.Session;
 
 public class Individual {
-    public Individual(Session session) {this.session = session;}
+    /*public Individual(Session session) {this.session = session;}
     private Session session;
 
     Scrap.Scrap s = new Scrap.Scrap();
@@ -34,5 +34,5 @@ public class Individual {
     }
     public int ranking(Libreria libreria) {
         return l.ranking(libreria.getNombre());
-    }
+    }*/
 }

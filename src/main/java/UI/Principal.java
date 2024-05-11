@@ -1,25 +1,31 @@
 package UI;
 
 import ORM.Libreria;
+import Scrap.Extract_metacritic;
+import Scrap.Extract_imdb;
+import Scrap.Scrap;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
+import org.hibernate.Session;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Principal extends JFrame{
-    private org.hibernate.Session session = HibernateUtil.getSessionFactory().openSession();
+    private Session session = HibernateUtil.getSessionFactory().openSession();
     private LibreriaDataService l = new LibreriaDataService(session);
-    private Scrap.Scrap s = new Scrap.Scrap();
+    private Scrap s = new Scrap();
     //private Individual i = new Individual(session);
-    private Scrap.Extract_imdb ei = new Scrap.Extract_imdb();
-    private Scrap.Extract_metacritic em = new Scrap.Extract_metacritic();
+    private Extract_imdb ei = new Extract_imdb();
+    private Extract_metacritic em = new Extract_metacritic();
 
 
     public JPanel panelMain;
@@ -45,31 +51,30 @@ public class Principal extends JFrame{
     private JPanel pnTipo;
     private JPanel pnFecha;
     private JPanel pnPuntuacion;
-    private JTextField tfAnyadirEnlace;
     private JTable tbAnyadir;
     private JButton btAceptarAnyadir;
     private JPanel Individual;
-    private JLabel laImagen;
     private JPanel pnImagen;
     private JLabel laNombre;
     private JLabel laTipo;
     private JLabel laFecha;
-    private JLabel laRanking;
     private JLabel laMetacritic;
     private JLabel laPuntuacion;
+    private JLabel laImagen;
 
     public Principal(){
         //LibreriaDataService l = new LibreriaDataService(session);
         ArrayList<Libreria> listaLibrerias = l.readAll();
 
+        //Inicio app
         generarTablaHome(listaLibrerias);
         generarTablaAnyadir();
-        cargarComboBox();
+        //No se usa -- cargarComboBox();
         cargarcbSearch();
         cargarCbFecha();
         cargarDia31();
         cargarCbAnyadirTipo();
-
+        // no se usa -- cargarTodasImagenes();
 
         //boton abrir pestañas
         btHome.addActionListener(new ActionListener() {
@@ -103,12 +108,25 @@ public class Principal extends JFrame{
                 }
             }
         });
+        homeTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    DefaultTableModel model = (DefaultTableModel) homeTable.getModel();
+                    String nombre = (String) model.getValueAt(row, 0);
+                    abrirIndividual(nombre);
+                    tab.setSelectedIndex(2);
+                }
+            }
+        });
 
         //pestaña añadir
         btAceptarAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre, tipo, anyo, mes, dia, puntuacion, enlace;
+                String nombre, tipo, anyo, mes, dia, puntuacion;
 
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
@@ -116,10 +134,12 @@ public class Principal extends JFrame{
                 mes = cbAnyadirMes.getSelectedItem().toString().trim();
                 dia = cbAnyadirDia.getSelectedItem().toString().trim();
                 puntuacion = tfAnyadirPuntuacion.getText().trim();
-                enlace = null;
 
-                anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion, enlace);
+                anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion);
                 actualizarTablaAnyadir(l.readAll());
+
+                limpiarAnyadir();
+                actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
             }
         });
         cbAnyadirMes.addActionListener(new ActionListener() {
@@ -137,7 +157,9 @@ public class Principal extends JFrame{
     }
 
     public void generarTablaHome(ArrayList<Libreria> listaLibrerias){
-        DefaultTableModel modeloTabla = (DefaultTableModel) homeTable.getModel();
+        homeTable.removeAll();
+        DefaultTableModel modeloTabla = new ReadOnlyTableModel();
+        homeTable.setModel(modeloTabla);
 
         modeloTabla.setRowCount(0);
 
@@ -148,19 +170,16 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("IMDB/Metacritic");
 
         for (Libreria libreria : listaLibrerias) {
-            if(libreria.getTipo().equalsIgnoreCase("pelicula")) {
-                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), ei.puntuacionIMDB(libreria.getNombre())};
-                modeloTabla.addRow(fila);
-            }
-            if(libreria.getTipo().equalsIgnoreCase("videojuego")) {
-                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), em.puntuacionMetacritic(libreria.getNombre())};
-                modeloTabla.addRow(fila);
-            }
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
+            modeloTabla.addRow(fila);
         }
+
         modeloTabla.fireTableDataChanged();
     }
     public void generarTablaAnyadir(){
-        DefaultTableModel modeloTabla = (DefaultTableModel) tbAnyadir.getModel();
+        tbAnyadir.removeAll();
+        DefaultTableModel modeloTabla = new ReadOnlyTableModel();
+        tbAnyadir.setModel(modeloTabla);
 
         modeloTabla.setRowCount(0);
 
@@ -168,6 +187,7 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha Fin");
         modeloTabla.addColumn("Puntuacion");
+        modeloTabla.addColumn("IMDB/Metacritic");
 
         modeloTabla.fireTableDataChanged();
     }
@@ -177,14 +197,8 @@ public class Principal extends JFrame{
         modeloTabla.setRowCount(0);
 
         for (Libreria libreria : listaLibrerias) {
-            if(libreria.getTipo().equalsIgnoreCase("pelicula")) {
-                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), ei.puntuacionIMDB(libreria.getNombre())};
-                modeloTabla.addRow(fila);
-            }
-            if(libreria.getTipo().equalsIgnoreCase("videojuego")) {
-                Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), em.puntuacionMetacritic(libreria.getNombre())};
-                modeloTabla.addRow(fila);
-            }
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
+            modeloTabla.addRow(fila);
         }
 
         modeloTabla.fireTableDataChanged();
@@ -195,18 +209,18 @@ public class Principal extends JFrame{
         modeloTabla.setRowCount(0);
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getPuntuacion()};
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
             modeloTabla.addRow(fila);
         }
 
         modeloTabla.fireTableDataChanged();
     }
-    public void cargarComboBox(){
+    /*public void cargarComboBox(){
         //LibreriaDataService l = new LibreriaDataService(session);
         List<String> tipos = l.readTipos();
 
         //cbSearch.setModel(new DefaultComboBoxModel(tipos.toArray()));
-    }
+    }*/
     public void cargarcbSearch(){
         cbSearch.removeAllItems();
         cbSearch.addItem("Nombre");
@@ -214,8 +228,7 @@ public class Principal extends JFrame{
         cbSearch.addItem("Fecha fin");
         cbSearch.addItem("Puntuacion");
     }
-    //añadir datos a la bbdd
-    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, String puntuacion, String enlace){
+    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, String puntuacion){
         if(nombre==null || nombre.isEmpty()){
             return "El nombre no puede estar vacio";
         }
@@ -254,19 +267,27 @@ public class Principal extends JFrame{
         }
 
         String fecha = anyo + "-" + mesnum + "-" + dia;
+        String puntuacionImdbMetacritic = "";
+        String imagen = "";
 
-        Libreria libreria = new Libreria(nombre, tipo, fecha, Integer.parseInt(puntuacion), enlace);
+        if(tipo.equals("Videojuego")){
+            puntuacionImdbMetacritic = "Metacritic " + em.puntuacionMetacritic(nombre);
+
+        }else{
+            puntuacionImdbMetacritic = "IMDB " + ei.puntuacionIMDB(nombre);
+            imagen = ei.imagenImdb2(nombre);
+        }
+
+        Libreria libreria = new Libreria(nombre, tipo, fecha, Integer.parseInt(puntuacion), puntuacionImdbMetacritic, imagen);
 
         return l.Guardar(libreria);
     }
-    //cargar combobox de tipo de anyadir
     public void cargarCbAnyadirTipo(){
         cbAnyadirTipo.removeAllItems();
         List<String> tipos = l.readTipos();
 
         cbAnyadirTipo.setModel(new DefaultComboBoxModel(tipos.toArray()));
     }
-    //cargar comboboxes de la fecha
     public void cargarCbFecha(){
         cbAnyadirAnyo.removeAllItems();
         cbAnyadirMes.removeAllItems();
@@ -277,7 +298,6 @@ public class Principal extends JFrame{
         String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
         cbAnyadirMes.setModel(new DefaultComboBoxModel(meses));
     }
-    //Cargar cb dia
     public void cargarCbAnyadirDia(String mes){
         switch(mes){
             case "Enero": cargarDia31(); break;
@@ -294,29 +314,81 @@ public class Principal extends JFrame{
             case "Diciembre": cargarDia31(); break;
         }
     }
-    //Cargar Dias pares
     public void cargarDia30(){
         cbAnyadirDia.removeAllItems();
         for(int i = 1; i < 31; i++){
             cbAnyadirDia.addItem(i);
         }
     }
-    //Cargar Dias impares
     public void cargarDia31(){
         cbAnyadirDia.removeAllItems();
         for(int i = 1; i < 32; i++){
             cbAnyadirDia.addItem(i);
         }
     }
-    //Cargar febrero
     public void cargarDiaFebrero(){
         cbAnyadirDia.removeAllItems();
         for(int i = 1; i < 29; i++){
             cbAnyadirDia.addItem(i);
         }
     }
-    //Scrapping
-    public String puntuacionMetacritic(String url){
-        return s.webScrap(url).get(0);
+    public void limpiarAnyadir(){
+        tfAnyadirNombre.setText("");
+        tfAnyadirPuntuacion.setText("");
+    }
+    public void abrirIndividual(String nombre){
+        ArrayList<Libreria> dato = l.find("Nombre", nombre);
+        Libreria registro = dato.get(0);
+        laNombre.setText("Nombre " + registro.getNombre());
+        laPuntuacion.setText("Puntuacion " + registro.getPuntuacion());
+        laFecha.setText("Fecha " + registro.getFechaFin());
+        laPuntuacion.setText("Puntuacion " + registro.getPuntuacion());
+        laMetacritic.setText("Puntuacion en " + registro.getImdbMetacritic());
+        laTipo.setText("Tipo " + registro.getTipo());
+        cargarImagen(registro.getImagen());
+    }
+    public void cargarImagen(String imagen){
+        pnImagen.removeAll();
+
+        Image image = null;
+        URL url = null;
+        try {
+            url = new URL(imagen);
+            image = ImageIO.read(url);
+            Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaledImage);
+            JLabel laImagen = new JLabel(icon);
+            pnImagen.add(laImagen);
+            pnImagen.setAlignmentX(0);
+            pnImagen.setAlignmentY(0);
+        } catch (MalformedURLException ex) {
+            System.out.println("Malformed URL");
+        } catch (IOException iox) {
+            System.out.println("Can not load file");
+        }
+
+    }
+    //No se usa --
+    /*public void cargarTodasImagenes(){
+        ArrayList<Libreria> libreria = l.readAll();
+        String imagen = "";
+        for(Libreria lib : libreria){
+            imagen = "";
+
+            if(lib.getTipo().equals("Videojuego")){
+
+            }else{
+                imagen = ei.imagenImdb2(lib.getNombre());
+            }
+
+            lib.setImagen(imagen);
+            l.update(lib);
+        }
+    }*/
+    class ReadOnlyTableModel extends DefaultTableModel {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Todas las celdas son de solo lectura
+        }
     }
 }

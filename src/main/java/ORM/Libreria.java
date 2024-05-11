@@ -13,17 +13,20 @@ public class Libreria {
     private String fechaFin;
     @Column (name="Puntuacion")
     private int puntuacion;
-    @Column (name="enlace")
-    private String enlace;
+    @Column (name="IMDB/Metacritic")
+    private String imdbMetacritic;
+    @Column (name="Imagen")
+    private String imagen;
 
     public Libreria() {}
 
-    public Libreria(String nombre, String tipo, String fechaFin, int puntuacion, String enlace) {
+    public Libreria(String nombre, String tipo, String fechaFin, int puntuacion, String imdbMetacritic, String imagen) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.fechaFin = fechaFin;
         this.puntuacion = puntuacion;
-        this.enlace = enlace;
+        this.imdbMetacritic = imdbMetacritic;
+        this.imagen = imagen;
     }
 
     public String getNombre() {
@@ -58,11 +61,19 @@ public class Libreria {
         this.puntuacion = puntuacion;
     }
 
-    public String getEnlace() {
-        return enlace;
+    public String getImdbMetacritic() {
+        return imdbMetacritic;
     }
 
-    public void setEnlace(String enlace) {
-        this.enlace = enlace;
+    public void setImdbMetacritic(String imdbMetacritic) {
+        this.imdbMetacritic = imdbMetacritic;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

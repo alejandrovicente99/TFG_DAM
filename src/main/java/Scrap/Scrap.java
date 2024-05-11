@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Scrap {
-    public ArrayList<String> webScrap(String url) {
+    /*public ArrayList<String> webScrap(String url) {
         ArrayList<String> devuelve = new ArrayList<>();
         try {
             // Realizar la solicitud HTTP
@@ -73,5 +73,5 @@ public class Scrap {
             e.printStackTrace();
         }
         return devuelve;
-    }
+    }*/
 }
