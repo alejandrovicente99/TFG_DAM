@@ -56,12 +56,12 @@ public class LibreriaDAOImpl implements LibreriaDAO {
             txn = session.beginTransaction();
             session.merge(entity);
             txn.commit();
-            linea = "Empleado actualizado";
+            linea = "Registro actualizado";
         }catch (HibernateException e){
             if(txn != null){
                 txn.rollback();
             }
-            linea = "Error al actualizar el empleado de la BBDD";
+            linea = "Error al actualizar el registro de la BBDD";
         }
         return linea;
     }
