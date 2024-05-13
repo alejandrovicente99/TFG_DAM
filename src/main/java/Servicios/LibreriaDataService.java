@@ -47,7 +47,9 @@ public class LibreriaDataService {
         return l.ranking(lib, miSession);
     }
     public String update(Libreria libreria){
-        l.update(libreria, miSession);
-        return "Hecho";
+        return l.update(libreria, miSession);
+    }
+    public String delete(Libreria libreria){
+        return l.delete(libreria, miSession);
     }
 }

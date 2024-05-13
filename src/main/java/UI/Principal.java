@@ -139,6 +139,7 @@ public class Principal extends JFrame{
                     btAceptar.setVisible(false);
                     btCancelar.setVisible(false);
                     libID = session.get(Libreria.class, nombre);
+                    laUpdate.setVisible(false);
                     tab.setSelectedIndex(2);
                 }
             }
@@ -249,12 +250,12 @@ public class Principal extends JFrame{
         btAceptar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //libID = session.get(Libreria.class, nombreID);
+                String update = "";
                 laUpdate.setVisible(true);
 
                 String nombre = tfEditarNombre.getText().trim();
                 String tipo = cbEditarTipo.getSelectedItem().toString().trim();
-                String fecha = cbEditarAnyo.getSelectedItem().toString().trim() + "-" + (cbEditarMes.getSelectedIndex()+1) + "-" + cbEditarDia.getSelectedItem().toString().trim() ;
+                String fecha = cbEditarAnyo.getSelectedItem().toString().trim() + "-" + (cbEditarMes.getSelectedIndex() + 1) + "-" + cbEditarDia.getSelectedItem().toString().trim();
                 /*String anyo = cbEditarAnyo.getSelectedItem().toString().trim();
                 String mes = cbEditarMes.getSelectedItem().toString().trim();
                 String dia = cbEditarDia.getSelectedItem().toString().trim();*/
@@ -263,16 +264,33 @@ public class Principal extends JFrame{
                 String puntuacionMetacritic = "";
                 String imagen = "";
 
-                if(tipo.equals("Videojuego")){
-                    puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
+                Libreria libNEW = session.get(Libreria.class, nombre);
 
-                }else{
-                    puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
-                    imagen = ei.imagenImdb2(nombre);
+                if(nombre.equals(nombreID)){
+                    Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, libID.getImdbMetacritic(), libID.getImagen());
+                    update = l.update(libUpdate);
+                    laUpdate.setText(update);
+                    abrirIndividual(libUpdate.getNombre());
+                } else {
+                    if(libNEW != null){
+                        laUpdate.setText("Ya existe un registro con ese nombre");
+                        abrirIndividual(nombreID);
+                    } else {
+                        l.delete(libID);
+                        if (tipo.equals("Videojuego")) {
+                            puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
+
+                        } else {
+                            puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
+                            imagen = ei.imagenImdb2(nombre);
+                        }
+
+                        Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionMetacritic, imagen);
+                        update = update + l.update(libUpdate);
+                        laUpdate.setText(update);
+                        abrirIndividual(libUpdate.getNombre());
+                    }
                 }
-
-                Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionMetacritic, imagen);
-                laUpdate.setText(l.update(libUpdate));
             }
         });
     }
@@ -481,6 +499,9 @@ public class Principal extends JFrame{
         cbEditarMes.setVisible(false);
         cbEditarDia.setVisible(false);
 
+        btCancelar.setVisible(false);
+        btAceptar.setVisible(false);
+        btEditar.setVisible(true);
     }
     public void cargarImagen(String imagen){
         pnImagen.removeAll();

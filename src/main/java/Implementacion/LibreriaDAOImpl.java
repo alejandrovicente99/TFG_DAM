@@ -20,12 +20,12 @@ public class LibreriaDAOImpl implements LibreriaDAO {
             txn = session.beginTransaction();
             session.persist(entity);
             txn.commit();
-            linea = "Registro de empleado ingresado en BBDD";
+            linea = "Registro ingresado en BBDD";
         }catch (HibernateException e){
             if(txn != null){
                 txn.rollback();
             }
-            linea=  "Error al añadir el empleado a la BBDD";
+            linea=  "Error al añadir el registro a la BBDD";
         }
         return linea;
     }
@@ -38,12 +38,12 @@ public class LibreriaDAOImpl implements LibreriaDAO {
             txn = session.beginTransaction();
             session.remove(entity);
             txn.commit();
-            linea = "Empleado borrado de la BBDD";
+            linea = "Registro borrado de la BBDD";
         }catch (HibernateException e){
             if(txn != null){
                 txn.rollback();
             }
-            linea = "Error al eliminar el empleado de la BBDD";
+            linea = "Error al eliminar el registro de la BBDD";
         }
         return linea;
     }
