@@ -1,7 +1,7 @@
 package UI;
 
 import ORM.Libreria;
-import Scrap.Extract_metacritic;
+import Scrap.Extract_videogame;
 import Scrap.Extract_imdb;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
@@ -24,7 +24,7 @@ public class Principal extends JFrame{
     //private Scrap s = new Scrap();
     //private Individual i = new Individual(session);
     private final Extract_imdb ei = new Extract_imdb();
-    private final Extract_metacritic em = new Extract_metacritic();
+    private final Extract_videogame em = new Extract_videogame();
 
 
     public JPanel panelMain;
@@ -71,6 +71,7 @@ public class Principal extends JFrame{
     private JButton btAceptar;
     private JButton btCancelar;
     private JLabel laUpdate;
+    private JButton btEliminar;
 
     private String nombreID;
     private Libreria libID = new Libreria();
@@ -136,6 +137,7 @@ public class Principal extends JFrame{
                     String nombre = (String) model.getValueAt(row, 0);
                     abrirIndividual(nombre);
                     btEditar.setVisible(true);
+                    btEliminar.setVisible(true);
                     btAceptar.setVisible(false);
                     btCancelar.setVisible(false);
                     libID = session.get(Libreria.class, nombre);
@@ -211,6 +213,7 @@ public class Principal extends JFrame{
                 btCancelar.setVisible(true);
                 btAceptar.setVisible(true);
                 btEditar.setVisible(false);
+                btEliminar.setVisible(false);
                 laUpdate.setVisible(false);
 
                 laFecha.setText("Fecha : ");
@@ -242,6 +245,7 @@ public class Principal extends JFrame{
                 btCancelar.setVisible(false);
                 btAceptar.setVisible(false);
                 btEditar.setVisible(true);
+                btEliminar.setVisible(true);
                 laUpdate.setVisible(false);
 
                 abrirIndividual(nombreID);
@@ -279,7 +283,7 @@ public class Principal extends JFrame{
                         l.delete(libID);
                         if (tipo.equals("Videojuego")) {
                             puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
-
+                            imagen = em.imagenSteamDB(nombre);
                         } else {
                             puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
                             imagen = ei.imagenImdb2(nombre);
@@ -293,8 +297,21 @@ public class Principal extends JFrame{
                 }
             }
         });
+        btEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres eliminar este registro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+                if (opcion == JOptionPane.YES_OPTION) {
+                    l.delete(libID);
+                    actualizarTablaHome(l.readAll());
+                    tab.setSelectedIndex(0);
+                }
+            }
+        });
     }
 
+    //Generar tablas
     public void generarTablaHome(ArrayList<Libreria> listaLibrerias){
         homeTable.removeAll();
         DefaultTableModel modeloTabla = new ReadOnlyTableModel();
@@ -330,6 +347,8 @@ public class Principal extends JFrame{
 
         modeloTabla.fireTableDataChanged();
     }
+
+    //Actualizar datos
     public void actualizarTablaHome(ArrayList<Libreria> listaLibrerias){
         DefaultTableModel modeloTabla = (DefaultTableModel) homeTable.getModel();
 
@@ -360,65 +379,14 @@ public class Principal extends JFrame{
 
         //cbSearch.setModel(new DefaultComboBoxModel(tipos.toArray()));
     }*/
+
+    //Cargar datos
     public void cargarcbSearch(){
         cbSearch.removeAllItems();
         cbSearch.addItem("Nombre");
         cbSearch.addItem("Tipo");
         cbSearch.addItem("Fecha fin");
         cbSearch.addItem("Puntuacion");
-    }
-    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, double puntuacion){
-        if(nombre==null || nombre.isEmpty()) {
-            return "El nombre no puede estar vacio";
-        }
-        Libreria duplicado = session.get(Libreria.class, nombre);
-        if(duplicado!=null){
-            return "Ya existe un registro con ese nombre";
-        }
-        if(tipo==null || tipo.isEmpty()){
-            return "El tipo no puede estar vacio";
-        }
-        if(anyo==null || anyo.isEmpty()){
-            return "El año no puede estar vacio";
-        }
-        if(mes==null || mes.isEmpty()){
-            return "El mes no puede estar vacio";
-        }
-        if(dia==null || dia.isEmpty()){
-            return "El dia no puede estar vacio";
-        }
-        /*int mesnum = 0;
-        switch(mes){
-            case "Enero": mesnum = 1; break;
-            case "Febrero": mesnum = 2; break;
-            case "Marzo": mesnum = 3; break;
-            case "Abril": mesnum = 4; break;
-            case "Mayo": mesnum = 5; break;
-            case "Junio": mesnum = 6; break;
-            case "Julio": mesnum = 7; break;
-            case "Agosto": mesnum = 8; break;
-            case "Septiembre": mesnum = 9; break;
-            case "Octubre": mesnum = 10; break;
-            case "Noviembre": mesnum = 11; break;
-            case "Diciembre": mesnum = 12; break;
-        }*/
-
-        //String fecha = anyo + "-" + mesnum + "-" + dia;
-        String fecha = anyo + "-" + mes + "-" + dia;
-        String puntuacionImdbMetacritic = "";
-        String imagen = "";
-
-        if(tipo.equals("Videojuego")){
-            puntuacionImdbMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
-
-        }else{
-            puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
-            imagen = ei.imagenImdb2(nombre);
-        }
-
-        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionImdbMetacritic, imagen);
-
-        return l.Guardar(libreria);
     }
     public void cargarCbAnyadirTipo(JComboBox model){
         model.removeAllItems();
@@ -470,6 +438,81 @@ public class Principal extends JFrame{
             model.addItem(i);
         }
     }
+    public void cargarImagen(String imagen){
+        pnImagen.removeAll();
+
+        Image image = null;
+        URL url = null;
+        try {
+            url = new URL(imagen);
+            image = ImageIO.read(url);
+            Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaledImage);
+            JLabel laImagen = new JLabel(icon);
+            pnImagen.add(laImagen);
+            pnImagen.setAlignmentX(0);
+            pnImagen.setAlignmentY(0);
+        } catch (MalformedURLException ex) {
+            System.out.println("Malformed URL");
+        } catch (IOException iox) {
+            System.out.println("Can not load file");
+        }
+
+    }
+
+    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, double puntuacion){
+        if(nombre==null || nombre.isEmpty()) {
+            return "El nombre no puede estar vacio";
+        }
+        Libreria duplicado = session.get(Libreria.class, nombre);
+        if(duplicado!=null){
+            return "Ya existe un registro con ese nombre";
+        }
+        if(tipo==null || tipo.isEmpty()){
+            return "El tipo no puede estar vacio";
+        }
+        if(anyo==null || anyo.isEmpty()){
+            return "El año no puede estar vacio";
+        }
+        if(mes==null || mes.isEmpty()){
+            return "El mes no puede estar vacio";
+        }
+        if(dia==null || dia.isEmpty()){
+            return "El dia no puede estar vacio";
+        }
+        /*int mesnum = 0;
+        switch(mes){
+            case "Enero": mesnum = 1; break;
+            case "Febrero": mesnum = 2; break;
+            case "Marzo": mesnum = 3; break;
+            case "Abril": mesnum = 4; break;
+            case "Mayo": mesnum = 5; break;
+            case "Junio": mesnum = 6; break;
+            case "Julio": mesnum = 7; break;
+            case "Agosto": mesnum = 8; break;
+            case "Septiembre": mesnum = 9; break;
+            case "Octubre": mesnum = 10; break;
+            case "Noviembre": mesnum = 11; break;
+            case "Diciembre": mesnum = 12; break;
+        }*/
+
+        //String fecha = anyo + "-" + mesnum + "-" + dia;
+        String fecha = anyo + "-" + mes + "-" + dia;
+        String puntuacionImdbMetacritic = "";
+        String imagen = "";
+
+        if(tipo.equals("Videojuego")){
+            puntuacionImdbMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
+            imagen = em.imagenSteamDB(nombre);
+        }else{
+            puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
+            imagen = ei.imagenImdb2(nombre);
+        }
+
+        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionImdbMetacritic, imagen);
+
+        return l.Guardar(libreria);
+    }
     public void limpiarAnyadir(){
         tfAnyadirNombre.setText("");
         tfAnyadirPuntuacion.setText("");
@@ -502,27 +545,7 @@ public class Principal extends JFrame{
         btCancelar.setVisible(false);
         btAceptar.setVisible(false);
         btEditar.setVisible(true);
-    }
-    public void cargarImagen(String imagen){
-        pnImagen.removeAll();
-
-        Image image = null;
-        URL url = null;
-        try {
-            url = new URL(imagen);
-            image = ImageIO.read(url);
-            Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(scaledImage);
-            JLabel laImagen = new JLabel(icon);
-            pnImagen.add(laImagen);
-            pnImagen.setAlignmentX(0);
-            pnImagen.setAlignmentY(0);
-        } catch (MalformedURLException ex) {
-            System.out.println("Malformed URL");
-        } catch (IOException iox) {
-            System.out.println("Can not load file");
-        }
-
+        btEliminar.setVisible(true);
     }
     //No se usa --
     /*public void cargarTodasImagenes(){

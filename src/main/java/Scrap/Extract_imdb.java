@@ -23,7 +23,6 @@ public class Extract_imdb {
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-            // Leer el contenido HTML de la página
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder htmlContent = new StringBuilder();
             String line;
@@ -50,6 +49,37 @@ public class Extract_imdb {
         return null;
     }
 
+    public static String searchImdbLink(String movieName) {
+        try {
+            String searchQuery = URLEncoder.encode(movieName + " IMDb", "UTF-8");
+            String url = "https://www.google.com/search?q=" + searchQuery;
+
+            Document document = Jsoup.connect(url).get();
+            Elements searchResults = document.select("div.g");
+
+            for (Element result : searchResults) {
+                Element linkElement = result.selectFirst("a[href]");
+                String link = linkElement.attr("href");
+                if (link.contains("imdb.com/title/")) {
+                    return extractImdbLink(link);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String extractImdbLink(String googleSearchResultLink) {
+        int start = googleSearchResultLink.indexOf("url?q=") + 6;
+        int end = googleSearchResultLink.indexOf("&", start);
+        if (end != -1) {
+            return googleSearchResultLink.substring(start, end);
+        } else {
+            return googleSearchResultLink.substring(start);
+        }
+    }
+
     public String imagenImdb1(String nombre){
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https" + searchImdbLink(nombre)).openConnection();
@@ -57,7 +87,6 @@ public class Extract_imdb {
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-            // Leer el contenido HTML de la página
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder htmlContent = new StringBuilder();
             String line;
@@ -68,10 +97,8 @@ public class Extract_imdb {
 
             String regex = "<a\\s+class=\"[^\"]*\"\\s+href=\"([^\"]*)\"[^>]*>";
 
-            // Compilar la expresión regular
             Pattern pattern = Pattern.compile(regex);
 
-            // Buscar el enlace en el HTML
             Matcher matcher = pattern.matcher(htmlContent);
             if (matcher.find()) {
                 String enlace = matcher.group(1);
@@ -105,38 +132,5 @@ public class Extract_imdb {
         }
         return null;
     }
-
-    public static String searchImdbLink(String movieName) {
-        try {
-            String searchQuery = URLEncoder.encode(movieName + " IMDb", "UTF-8");
-            String url = "https://www.google.com/search?q=" + searchQuery;
-
-            Document document = Jsoup.connect(url).get();
-            Elements searchResults = document.select("div.g"); // Obtener los resultados de búsqueda
-
-            // Iterar sobre los resultados de búsqueda para encontrar un enlace a IMDb
-            for (Element result : searchResults) {
-                Element linkElement = result.selectFirst("a[href]");
-                String link = linkElement.attr("href");
-                if (link.contains("imdb.com/title/")) {
-                    return extractImdbLink(link);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String extractImdbLink(String googleSearchResultLink) {
-        int start = googleSearchResultLink.indexOf("url?q=") + 6;
-        int end = googleSearchResultLink.indexOf("&", start);
-        if (end != -1) {
-            return googleSearchResultLink.substring(start, end);
-        } else {
-            return googleSearchResultLink.substring(start);
-        }
-    }
-
 }
 

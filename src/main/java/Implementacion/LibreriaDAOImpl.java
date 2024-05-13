@@ -83,7 +83,7 @@ public class LibreriaDAOImpl implements LibreriaDAO {
     @Override
     public List<String> readTipos(Session session) {
         try{
-            List<String> tipos = session.createQuery("Select distinct tipo from Libreria").getResultList();
+            List<String> tipos = session.createQuery("Select distinct tipo from Libreria order by tipo asc").getResultList();
 
             return tipos;
         } catch (Exception ignored) {
