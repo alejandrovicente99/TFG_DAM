@@ -43,8 +43,8 @@ public class LibreriaDataService {
         }
         return l.findByType(miSession, tipo);
     }
-    public int ranking(String nombre){
-        return l.ranking(nombre, miSession);
+    public int ranking(Libreria lib){
+        return l.ranking(lib, miSession);
     }
     public String update(Libreria libreria){
         l.update(libreria, miSession);

@@ -60,7 +60,8 @@ public class Principal extends JFrame{
     private JLabel laFecha;
     private JLabel laMetacritic;
     private JLabel laPuntuacion;
-    private JLabel laImagen;
+    private JLabel laRanking;
+    private JLabel laAnyadir;
 
     public Principal(){
         //LibreriaDataService l = new LibreriaDataService(session);
@@ -89,6 +90,8 @@ public class Principal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 tab.setSelectedIndex(1);
                 actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString()));
+                limpiarAnyadir();
+                laAnyadir.setText("");
             }
         });
         btTop.addActionListener(new ActionListener() {
@@ -126,20 +129,35 @@ public class Principal extends JFrame{
         btAceptarAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre, tipo, anyo, mes, dia, puntuacion;
+                String nombre, tipo, anyo, mes, dia;
+                double puntuacion = 0;
+
+                laAnyadir.setText(null);
 
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
                 anyo = cbAnyadirAnyo.getSelectedItem().toString().trim();
                 mes = cbAnyadirMes.getSelectedItem().toString().trim();
                 dia = cbAnyadirDia.getSelectedItem().toString().trim();
-                puntuacion = tfAnyadirPuntuacion.getText().trim();
 
-                anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion);
-                actualizarTablaAnyadir(l.readAll());
+                if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
+                    laAnyadir.setText("La puntuacion no puede estar vacia");
+                }else {
+                    try {
+                        puntuacion = Double.parseDouble(tfAnyadirPuntuacion.getText().trim());
 
-                limpiarAnyadir();
-                actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
+                        if(puntuacion <= 10 || puntuacion >= 0) {
+                            laAnyadir.setText(anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion));
+                            limpiarAnyadir();
+                            actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
+                        }else{
+                            laAnyadir.setText("La puntuacion debe ser mayor que 0 y menor que 10");
+                        }
+                    } catch (NumberFormatException ex){
+                        laAnyadir.setText("La puntuacion debe ser un valor numerico, y los decimales se ponen con un punto (.)");
+                        tfAnyadirPuntuacion.setText(null);
+                    }
+                }
             }
         });
         cbAnyadirMes.addActionListener(new ActionListener() {
@@ -228,7 +246,7 @@ public class Principal extends JFrame{
         cbSearch.addItem("Fecha fin");
         cbSearch.addItem("Puntuacion");
     }
-    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, String puntuacion){
+    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, double puntuacion){
         if(nombre==null || nombre.isEmpty()){
             return "El nombre no puede estar vacio";
         }
@@ -243,12 +261,6 @@ public class Principal extends JFrame{
         }
         if(dia==null || dia.isEmpty()){
             return "El dia no puede estar vacio";
-        }
-        if(puntuacion==null || puntuacion.isEmpty()){
-            return "La puntuacion no puede estar vacio";
-        }
-        if(Integer.parseInt(puntuacion)<0 || Integer.parseInt(puntuacion)>10){
-            return "La puntuacion no puede ser ni mayor que 10 ni menor que 0";
         }
         int mesnum = 0;
         switch(mes){
@@ -271,14 +283,14 @@ public class Principal extends JFrame{
         String imagen = "";
 
         if(tipo.equals("Videojuego")){
-            puntuacionImdbMetacritic = "Metacritic " + em.puntuacionMetacritic(nombre);
+            puntuacionImdbMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
 
         }else{
-            puntuacionImdbMetacritic = "IMDB " + ei.puntuacionIMDB(nombre);
+            puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
             imagen = ei.imagenImdb2(nombre);
         }
 
-        Libreria libreria = new Libreria(nombre, tipo, fecha, Integer.parseInt(puntuacion), puntuacionImdbMetacritic, imagen);
+        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionImdbMetacritic, imagen);
 
         return l.Guardar(libreria);
     }
@@ -339,12 +351,13 @@ public class Principal extends JFrame{
     public void abrirIndividual(String nombre){
         ArrayList<Libreria> dato = l.find("Nombre", nombre);
         Libreria registro = dato.get(0);
-        laNombre.setText("Nombre " + registro.getNombre());
-        laPuntuacion.setText("Puntuacion " + registro.getPuntuacion());
-        laFecha.setText("Fecha " + registro.getFechaFin());
-        laPuntuacion.setText("Puntuacion " + registro.getPuntuacion());
+        laNombre.setText("Nombre : " + registro.getNombre());
+        laPuntuacion.setText("Puntuacion : " + registro.getPuntuacion());
+        laFecha.setText("Fecha : " + registro.getFechaFin());
+        laPuntuacion.setText("Puntuacion : " + registro.getPuntuacion());
         laMetacritic.setText("Puntuacion en " + registro.getImdbMetacritic());
-        laTipo.setText("Tipo " + registro.getTipo());
+        laTipo.setText("Tipo : " + registro.getTipo());
+        laRanking.setText("Ranking : " + l.ranking(registro));
         cargarImagen(registro.getImagen());
     }
     public void cargarImagen(String imagen){

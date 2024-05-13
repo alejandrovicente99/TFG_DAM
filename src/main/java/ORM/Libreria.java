@@ -12,7 +12,7 @@ public class Libreria {
     @Column (name="Fecha fin")
     private String fechaFin;
     @Column (name="Puntuacion")
-    private int puntuacion;
+    private double puntuacion;
     @Column (name="IMDB/Metacritic")
     private String imdbMetacritic;
     @Column (name="Imagen")
@@ -20,7 +20,7 @@ public class Libreria {
 
     public Libreria() {}
 
-    public Libreria(String nombre, String tipo, String fechaFin, int puntuacion, String imdbMetacritic, String imagen) {
+    public Libreria(String nombre, String tipo, String fechaFin, double puntuacion, String imdbMetacritic, String imagen) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.fechaFin = fechaFin;
@@ -53,11 +53,11 @@ public class Libreria {
         this.fechaFin = fechaFin;
     }
 
-    public int getPuntuacion() {
+    public double getPuntuacion() {
         return puntuacion;
     }
 
-    public void setPuntuacion(int puntuacion) {
+    public void setPuntuacion(double puntuacion) {
         this.puntuacion = puntuacion;
     }
 

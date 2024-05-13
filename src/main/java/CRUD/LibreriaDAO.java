@@ -13,5 +13,5 @@ public interface LibreriaDAO<T> {
     List<String> readTipos(Session session);
     ArrayList<T> find(Session session, String cb, String tf);
     ArrayList<T> findByType(Session session, String tipo);
-    int ranking(String nombre, Session session);
+    int ranking(T entity, Session session);
 }
