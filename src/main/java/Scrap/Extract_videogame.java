@@ -90,26 +90,14 @@ public class Extract_videogame {
 
     public String imagenSteamDB(String nombre){
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchSteamDBLink(nombre)).openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder htmlContent = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                htmlContent.append(line);
-            }
-            reader.close();
-
             Document doc = Jsoup.connect("https" + searchSteamDBLink(nombre)).get();
 
             Element metaElement = doc.select("meta[property=og:image]").first();
 
             String imgUrl = metaElement.attr("content");
 
-            System.out.println(imgUrl);
+            System.out.println("Imagen : " + imgUrl);
+
             return imgUrl;
 
         } catch (IOException e) {
@@ -130,6 +118,7 @@ public class Extract_videogame {
                 Element linkElement = result.selectFirst("a[href]");
                 String link = linkElement.attr("href");
                 if (link.contains("steamgriddb.com")) {
+                    System.out.println("Enlace steamdb : "+ extractSteamDBLink(link));
                     return extractSteamDBLink(link);
                 }
             }

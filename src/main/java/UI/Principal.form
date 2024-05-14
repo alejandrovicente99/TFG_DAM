@@ -6,6 +6,10 @@
       <xy x="6" y="3" width="974" height="823"/>
     </constraints>
     <properties>
+      <background color="-13027015"/>
+      <foreground color="-13027015"/>
+      <maximumSize width="960" height="540"/>
+      <minimumSize width="960" height="540"/>
       <preferredSize width="960" height="540"/>
     </properties>
     <border type="none"/>
@@ -21,7 +25,7 @@
         </constraints>
         <properties>
           <alignmentX value="0.0"/>
-          <background color="-16013851"/>
+          <background color="-13027015"/>
         </properties>
         <border type="none"/>
         <children>
@@ -34,8 +38,9 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-16008961"/>
-              <foreground color="-16008961"/>
+              <background color="-13947600"/>
+              <foreground color="-13027015"/>
+              <opaque value="false"/>
               <text value="Top"/>
             </properties>
           </component>
@@ -48,8 +53,9 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-16008961"/>
-              <foreground color="-16008961"/>
+              <background color="-13947600"/>
+              <foreground color="-13027015"/>
+              <opaque value="false"/>
               <text value="Tipo"/>
             </properties>
           </component>
@@ -62,8 +68,9 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-16008961"/>
-              <foreground color="-16008961"/>
+              <background color="-13947600"/>
+              <foreground color="-13027015"/>
+              <opaque value="false"/>
               <text value="Home"/>
             </properties>
           </component>
@@ -94,8 +101,9 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-16008961"/>
-              <foreground color="-16008961"/>
+              <background color="-13947600"/>
+              <foreground color="-13027015"/>
+              <opaque value="false"/>
               <text value="Añadir"/>
             </properties>
           </component>
@@ -122,15 +130,19 @@
               <tabbedpane title="Untitled"/>
             </constraints>
             <properties>
-              <background color="-13947600"/>
+              <background color="-13027015"/>
             </properties>
             <border type="none"/>
             <children>
               <scrollpane id="48f8a" binding="scrollPane">
                 <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="400"/>
+                  </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <foreground color="-2960686"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="715fc" class="javax.swing.JTable" binding="homeTable">
@@ -155,7 +167,7 @@
                 <properties>
                   <background color="-1"/>
                   <font name="Roboto Light" size="36"/>
-                  <foreground color="-394241"/>
+                  <foreground color="-394759"/>
                   <text value="LISTA TOTAL"/>
                 </properties>
               </component>
@@ -182,7 +194,10 @@
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-13027015"/>
+                  <foreground color="-13027015"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="7d15f" class="javax.swing.JTextField" binding="tfSearch">
@@ -202,11 +217,14 @@
                       </grid>
                     </constraints>
                   </hspacer>
-                  <component id="58b8c" class="javax.swing.JLabel">
+                  <component id="58b8c" class="javax.swing.JLabel" binding="la8">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <background color="-1"/>
+                      <foreground color="-1"/>
+                      <opaque value="false"/>
                       <text value="Buscar por"/>
                     </properties>
                   </component>
@@ -234,7 +252,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-1966127"/>
+                  <background color="-13027015"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -260,11 +278,14 @@
                         </properties>
                         <border type="none"/>
                         <children>
-                          <component id="5fe97" class="javax.swing.JLabel">
+                          <component id="5fe97" class="javax.swing.JLabel" binding="la1">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <background color="-1"/>
+                              <focusable value="false"/>
+                              <foreground color="-1"/>
                               <text value="Nombre"/>
                             </properties>
                           </component>
@@ -295,11 +316,12 @@
                         </properties>
                         <border type="none"/>
                         <children>
-                          <component id="1deb0" class="javax.swing.JLabel">
+                          <component id="1deb0" class="javax.swing.JLabel" binding="la6">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Tipo"/>
                             </properties>
                           </component>
@@ -323,11 +345,12 @@
                         </properties>
                         <border type="none"/>
                         <children>
-                          <component id="5e762" class="javax.swing.JLabel">
+                          <component id="5e762" class="javax.swing.JLabel" binding="la7">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Puntuacion"/>
                             </properties>
                           </component>
@@ -358,11 +381,12 @@
                         </properties>
                         <border type="none"/>
                         <children>
-                          <component id="6de95" class="javax.swing.JLabel">
+                          <component id="6de95" class="javax.swing.JLabel" binding="la2">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Fecha"/>
                             </properties>
                           </component>
@@ -400,27 +424,30 @@
                                   <opaque value="false"/>
                                 </properties>
                               </component>
-                              <component id="2d0d7" class="javax.swing.JLabel">
+                              <component id="2d0d7" class="javax.swing.JLabel" binding="la3">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
+                                  <foreground color="-1"/>
                                   <text value="Año"/>
                                 </properties>
                               </component>
-                              <component id="69d95" class="javax.swing.JLabel">
+                              <component id="69d95" class="javax.swing.JLabel" binding="la4">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
+                                  <foreground color="-1"/>
                                   <text value="Mes"/>
                                 </properties>
                               </component>
-                              <component id="676f4" class="javax.swing.JLabel">
+                              <component id="676f4" class="javax.swing.JLabel" binding="la5">
                                 <constraints>
                                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
+                                  <foreground color="-1"/>
                                   <text value="Dia"/>
                                 </properties>
                               </component>
@@ -470,6 +497,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -526,7 +554,10 @@
             <constraints>
               <tabbedpane title="Untitled"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-13027015"/>
+              <foreground color="-13027015"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="11769" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -534,14 +565,21 @@
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-13027015"/>
+                  <foreground color="-13027015"/>
+                  <opaque value="false"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <grid id="3f5e" binding="pnImagen" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <background color="-13027015"/>
+                      <foreground color="-13027015"/>
+                    </properties>
                     <border type="none"/>
                     <children/>
                   </grid>
@@ -550,7 +588,10 @@
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <background color="-13027015"/>
+                      <foreground color="-13027015"/>
+                    </properties>
                     <border type="none"/>
                     <children>
                       <grid id="f32c6" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -558,7 +599,9 @@
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="6e0da" class="javax.swing.JTextField" binding="tfEditarNombre">
@@ -574,6 +617,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -584,7 +628,9 @@
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="3b4c" class="javax.swing.JComboBox" binding="cbEditarTipo">
@@ -598,6 +644,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -608,7 +655,9 @@
                         <constraints>
                           <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="b88ca" class="javax.swing.JComboBox" binding="cbEditarMes">
@@ -634,6 +683,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -644,7 +694,9 @@
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="8cbc9" class="javax.swing.JLabel" binding="laPuntuacion">
@@ -652,6 +704,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -669,7 +722,9 @@
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="4d797" class="javax.swing.JLabel" binding="laRanking">
@@ -677,6 +732,7 @@
                               <card name="Card1"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -686,7 +742,9 @@
                         <constraints>
                           <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="e4e13" class="javax.swing.JLabel" binding="laMetacritic">
@@ -694,6 +752,7 @@
                               <card name="Card1"/>
                             </constraints>
                             <properties>
+                              <foreground color="-1"/>
                               <text value="Label"/>
                             </properties>
                           </component>
@@ -728,6 +787,7 @@
                           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <foreground color="-1"/>
                           <text value="Label"/>
                         </properties>
                       </component>

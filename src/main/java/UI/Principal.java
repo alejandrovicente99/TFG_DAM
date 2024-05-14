@@ -6,9 +6,10 @@ import Scrap.Extract_imdb;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
 import org.hibernate.Session;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -72,6 +73,14 @@ public class Principal extends JFrame{
     private JButton btCancelar;
     private JLabel laUpdate;
     private JButton btEliminar;
+    private JLabel la1;
+    private JLabel la2;
+    private JLabel la3;
+    private JLabel la4;
+    private JLabel la5;
+    private JLabel la6;
+    private JLabel la7;
+    private JLabel la8;
 
     private String nombreID;
     private Libreria libID = new Libreria();
@@ -90,7 +99,7 @@ public class Principal extends JFrame{
         cargarDia31(cbAnyadirDia);
         cargarDia31(cbEditarDia);
         cargarCbAnyadirTipo(cbAnyadirTipo);
-        // no se usa -- cargarTodasImagenes();
+        // no se usa -- cargarTodasImagenes()
 
         //boton abrir pestañas
         btHome.addActionListener(new ActionListener() {
@@ -284,6 +293,7 @@ public class Principal extends JFrame{
                         if (tipo.equals("Videojuego")) {
                             puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
                             imagen = em.imagenSteamDB(nombre);
+                            if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombre);
                         } else {
                             puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
                             imagen = ei.imagenImdb2(nombre);
@@ -443,12 +453,19 @@ public class Principal extends JFrame{
 
         Image image = null;
         URL url = null;
+
         try {
             url = new URL(imagen);
             image = ImageIO.read(url);
             Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(scaledImage);
             JLabel laImagen = new JLabel(icon);
+
+            Border bordeBlanco = BorderFactory.createLineBorder(Color.WHITE, 5);
+            Border bordeExistente = laImagen.getBorder();
+            Border bordeCompuesto = new CompoundBorder(bordeExistente, bordeBlanco);
+            laImagen.setBorder(bordeCompuesto);
+
             pnImagen.add(laImagen);
             pnImagen.setAlignmentX(0);
             pnImagen.setAlignmentY(0);
@@ -457,7 +474,6 @@ public class Principal extends JFrame{
         } catch (IOException iox) {
             System.out.println("Can not load file");
         }
-
     }
 
     public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, double puntuacion){
@@ -504,6 +520,7 @@ public class Principal extends JFrame{
         if(tipo.equals("Videojuego")){
             puntuacionImdbMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
             imagen = em.imagenSteamDB(nombre);
+            if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombre);
         }else{
             puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
             imagen = ei.imagenImdb2(nombre);
