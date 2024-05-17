@@ -14,7 +14,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="cbd71" binding="panelMenu" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="cbd71" binding="panelMenu" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -29,36 +29,6 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="a26fa" class="javax.swing.JButton" binding="btTop">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-                <preferred-size width="-1" height="50"/>
-                <maximum-size width="-1" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-13947600"/>
-              <foreground color="-13027015"/>
-              <opaque value="false"/>
-              <text value="Top"/>
-            </properties>
-          </component>
-          <component id="dc138" class="javax.swing.JButton" binding="btTipo">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-                <preferred-size width="-1" height="50"/>
-                <maximum-size width="-1" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-13947600"/>
-              <foreground color="-13027015"/>
-              <opaque value="false"/>
-              <text value="Tipo"/>
-            </properties>
-          </component>
           <component id="a8572" class="javax.swing.JButton" binding="btHome">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
@@ -76,7 +46,7 @@
           </component>
           <vspacer id="ba70d">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="500"/>
                 <preferred-size width="-1" height="500"/>
                 <maximum-size width="-1" height="500"/>
@@ -243,7 +213,10 @@
             <constraints>
               <tabbedpane title="Untitled"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-13027015"/>
+              <foreground color="-13027015"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="275cf" layout-manager="GridLayoutManager" row-count="5" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -253,6 +226,7 @@
                 </constraints>
                 <properties>
                   <background color="-13027015"/>
+                  <foreground color="-13027015"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -459,9 +433,7 @@
                   </grid>
                   <vspacer id="18346">
                     <constraints>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                        <preferred-size width="-1" height="100"/>
-                      </grid>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
                   <hspacer id="43774">
@@ -511,7 +483,9 @@
                         <preferred-size width="150" height="50"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <autoCreateRowSorter value="false"/>
+                    </properties>
                   </component>
                   <component id="30ae3" class="javax.swing.JButton" binding="btAceptarAnyadir">
                     <constraints>
@@ -542,7 +516,7 @@
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                     <minimum-size width="-1" height="200"/>
-                    <preferred-size width="-1" height="200"/>
+                    <preferred-size width="-1" height="100"/>
                     <maximum-size width="-1" height="200"/>
                   </grid>
                 </constraints>
@@ -782,21 +756,29 @@
                           <text value="Cancelar"/>
                         </properties>
                       </component>
-                      <component id="96e5c" class="javax.swing.JLabel" binding="laUpdate">
-                        <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <foreground color="-1"/>
-                          <text value="Label"/>
-                        </properties>
-                      </component>
                       <component id="c8c46" class="javax.swing.JButton" binding="btEliminar">
                         <constraints>
                           <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
                           <text value="Eliminar"/>
+                        </properties>
+                      </component>
+                      <component id="96e5c" class="javax.swing.JLabel" binding="laUpdate">
+                        <constraints>
+                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <foreground color="-1"/>
+                          <text value="Label"/>
+                        </properties>
+                      </component>
+                      <component id="e6c14" class="javax.swing.JButton" binding="btCargarImagen">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Recargar"/>
                         </properties>
                       </component>
                     </children>

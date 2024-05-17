@@ -33,7 +33,6 @@ public class Principal extends JFrame{
     private JTabbedPane tab;
     private JPanel home;
     private JButton btTop;
-    private JButton btTipo;
     private JButton btHome;
     private JScrollPane scrollPane;
     private JTable homeTable;
@@ -81,6 +80,7 @@ public class Principal extends JFrame{
     private JLabel la6;
     private JLabel la7;
     private JLabel la8;
+    private JButton btCargarImagen;
 
     private String nombreID;
     private Libreria libID = new Libreria();
@@ -118,12 +118,6 @@ public class Principal extends JFrame{
                 laAnyadir.setText("");
             }
         });
-        btTop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tab.setSelectedIndex(2);
-            }
-        });
 
 
         //pestaña home
@@ -150,6 +144,7 @@ public class Principal extends JFrame{
                     btAceptar.setVisible(false);
                     btCancelar.setVisible(false);
                     libID = session.get(Libreria.class, nombre);
+                    nombreID = nombre;
                     laUpdate.setVisible(false);
                     tab.setSelectedIndex(2);
                 }
@@ -317,6 +312,29 @@ public class Principal extends JFrame{
                     actualizarTablaHome(l.readAll());
                     tab.setSelectedIndex(0);
                 }
+            }
+        });
+        btCargarImagen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Libreria libNew = session.get(Libreria.class, nombreID);
+                String imagen;
+                String puntuacion;
+                if(libNew.getTipo().equals("Videojuego")){
+                    imagen = em.imagenSteamDB(nombreID);
+                    puntuacion = em.puntuacionMetacritic(nombreID);
+                }else{
+                    imagen = ei.imagenImdb2(nombreID);
+                    puntuacion = ei.puntuacionIMDB(nombreID);
+                }
+
+                if(imagen.endsWith(".webm")){
+                    imagen = ei.imagenImdb2(nombreID);
+                }
+                libNew.setImagen(imagen);
+                libNew.setImdbMetacritic(puntuacion);
+                l.update(libNew);
+                abrirIndividual(libNew.getNombre());
             }
         });
     }
