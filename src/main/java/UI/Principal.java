@@ -6,6 +6,10 @@ import Scrap.Extract_imdb;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
 import org.hibernate.Session;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,7 +20,9 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
 
 public class Principal extends JFrame{
@@ -42,9 +48,9 @@ public class Principal extends JFrame{
     private JButton btAnyadir;
     private JTextField tfAnyadirNombre;
     private JComboBox cbAnyadirTipo;
-    private JComboBox cbAnyadirAnyo;
-    private JComboBox cbAnyadirMes;
-    private JComboBox cbAnyadirDia;
+    //private JComboBox cbAnyadirAnyo;
+    //private JComboBox cbAnyadirMes;
+    //private JComboBox cbAnyadirDia;
     private JTextField tfAnyadirPuntuacion;
     private JPanel pnNombre;
     private JPanel pnTipo;
@@ -61,9 +67,9 @@ public class Principal extends JFrame{
     private JLabel laPuntuacion;
     private JLabel laRanking;
     private JLabel laAnyadir;
-    private JComboBox cbEditarDia;
-    private JComboBox cbEditarMes;
-    private JComboBox cbEditarAnyo;
+    //private JComboBox cbEditarDia;
+    //private JComboBox cbEditarMes;
+    //private JComboBox cbEditarAnyo;
     private JComboBox cbEditarTipo;
     private JTextField tfPuntuacion;
     private JTextField tfEditarNombre;
@@ -74,13 +80,12 @@ public class Principal extends JFrame{
     private JButton btEliminar;
     private JLabel la1;
     private JLabel la2;
-    private JLabel la3;
-    private JLabel la4;
-    private JLabel la5;
     private JLabel la6;
     private JLabel la7;
     private JLabel la8;
     private JButton btCargarImagen;
+    private JPanel pnCalendarioIndividual;
+    private JPanel pnCalendarioAnyadir;
 
     private String nombreID;
     private Libreria libID = new Libreria();
@@ -89,15 +94,27 @@ public class Principal extends JFrame{
         //LibreriaDataService l = new LibreriaDataService(session);
         ArrayList<Libreria> listaLibrerias = l.readAll();
 
+        //Cargar calendatios
+        UtilDateModel model = new UtilDateModel();
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+
+        pnCalendarioAnyadir.add(datePicker);
+        pnCalendarioAnyadir.add(datePicker);
+
         //Inicio app
         generarTablaHome(listaLibrerias);
         generarTablaAnyadir();
         //No se usa -- cargarComboBox();
         cargarcbSearch();
-        cargarCbFecha(cbAnyadirAnyo, cbAnyadirMes);
-        cargarCbFecha(cbEditarAnyo, cbEditarMes);
-        cargarDia31(cbAnyadirDia);
-        cargarDia31(cbEditarDia);
+        //cargarCbFecha(cbAnyadirAnyo, cbAnyadirMes);
+        //cargarCbFecha(cbEditarAnyo, cbEditarMes);
+        //cargarDia31(cbAnyadirDia);
+        //cargarDia31(cbEditarDia);
         cargarCbAnyadirTipo(cbAnyadirTipo);
         // no se usa -- cargarTodasImagenes()
 
@@ -155,16 +172,18 @@ public class Principal extends JFrame{
         btAceptarAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre, tipo, anyo, mes, dia;
+                String nombre, tipo, anyo, mes, dia, fecha;
                 double puntuacion = 0;
 
                 laAnyadir.setText(null);
 
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
-                anyo = cbAnyadirAnyo.getSelectedItem().toString().trim();
+                /*anyo = cbAnyadirAnyo.getSelectedItem().toString().trim();
                 mes = String.valueOf(cbAnyadirMes.getSelectedIndex()+1);
-                dia = cbAnyadirDia.getSelectedItem().toString().trim();
+                dia = cbAnyadirDia.getSelectedItem().toString().trim();*/
+                Date selectedDate = (Date) datePicker.getModel().getValue();
+
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
                     laAnyadir.setText("La puntuacion no puede estar vacia");
@@ -173,7 +192,7 @@ public class Principal extends JFrame{
                         puntuacion = Double.parseDouble(tfAnyadirPuntuacion.getText().trim());
 
                         if(puntuacion <= 10 || puntuacion >= 0) {
-                            laAnyadir.setText(anyadirDatos(nombre, tipo, anyo, mes, dia, puntuacion));
+                            laAnyadir.setText(anyadirDatos(nombre, tipo, selectedDate, puntuacion));
                             limpiarAnyadir();
                             actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                         }else{
@@ -186,12 +205,12 @@ public class Principal extends JFrame{
                 }
             }
         });
-        cbAnyadirMes.addActionListener(new ActionListener() {
+        /*cbAnyadirMes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cargarCbDia(cbAnyadirMes.getSelectedItem().toString(), cbAnyadirDia);
             }
-        });
+        });*/
         cbAnyadirTipo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -203,7 +222,7 @@ public class Principal extends JFrame{
         btEditar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fecha = libID.getFechaFin();
+                /*String fecha = libID.getFechaFin();
 
                 String[] partes = fecha.split("-");
 
@@ -211,7 +230,7 @@ public class Principal extends JFrame{
                 String mes = partes[1];
                 String dia = partes[2];
 
-                System.out.println(anyo + " " + mes + " " + dia);
+                System.out.println(anyo + " " + mes + " " + dia);*/
 
                 nombreID = tfEditarNombre.getText().trim();
                 btCancelar.setVisible(true);
@@ -226,17 +245,19 @@ public class Principal extends JFrame{
                 tfEditarNombre.setText(libID.getNombre());
                 tfPuntuacion.setText(String.valueOf(libID.getPuntuacion()));
 
-                cbEditarAnyo.setSelectedItem(anyo);
+                /*cbEditarAnyo.setSelectedItem(anyo);
                 cbEditarMes.setSelectedItem(mes);
                 cargarCbDia(mes, cbEditarDia);
-                cbEditarDia.setSelectedItem(dia);
+                cbEditarDia.setSelectedItem(dia);*/
+                model.setValue(libID.getFechaFin());
 
                 tfEditarNombre.setEditable(true);
                 tfPuntuacion.setEditable(true);
 
-                cbEditarDia.setVisible(true);
+                /*cbEditarDia.setVisible(true);
                 cbEditarMes.setVisible(true);
-                cbEditarAnyo.setVisible(true);
+                cbEditarAnyo.setVisible(true);*/
+                pnCalendarioIndividual.setVisible(true);
                 cbEditarTipo.setVisible(true);
                 cargarCbAnyadirTipo(cbEditarTipo);
             }
@@ -263,7 +284,8 @@ public class Principal extends JFrame{
 
                 String nombre = tfEditarNombre.getText().trim();
                 String tipo = cbEditarTipo.getSelectedItem().toString().trim();
-                String fecha = cbEditarAnyo.getSelectedItem().toString().trim() + "-" + (cbEditarMes.getSelectedIndex() + 1) + "-" + cbEditarDia.getSelectedItem().toString().trim();
+                //String fecha = cbEditarAnyo.getSelectedItem().toString().trim() + "-" + (cbEditarMes.getSelectedIndex() + 1) + "-" + cbEditarDia.getSelectedItem().toString().trim();
+                Date fecha = (Date) datePicker.getModel().getValue();
                 /*String anyo = cbEditarAnyo.getSelectedItem().toString().trim();
                 String mes = cbEditarMes.getSelectedItem().toString().trim();
                 String dia = cbEditarDia.getSelectedItem().toString().trim();*/
@@ -375,6 +397,7 @@ public class Principal extends JFrame{
 
         modeloTabla.fireTableDataChanged();
     }
+
 
     //Actualizar datos
     public void actualizarTablaHome(ArrayList<Libreria> listaLibrerias){
@@ -494,7 +517,7 @@ public class Principal extends JFrame{
         }
     }
 
-    public String anyadirDatos(String nombre, String tipo, String anyo, String mes, String dia, double puntuacion){
+    public String anyadirDatos(String nombre, String tipo, Date fecha, double puntuacion){
         if(nombre==null || nombre.isEmpty()) {
             return "El nombre no puede estar vacio";
         }
@@ -505,14 +528,8 @@ public class Principal extends JFrame{
         if(tipo==null || tipo.isEmpty()){
             return "El tipo no puede estar vacio";
         }
-        if(anyo==null || anyo.isEmpty()){
-            return "El año no puede estar vacio";
-        }
-        if(mes==null || mes.isEmpty()){
-            return "El mes no puede estar vacio";
-        }
-        if(dia==null || dia.isEmpty()){
-            return "El dia no puede estar vacio";
+        if(fecha == null){
+            return "La fecha no puede estar vacia";
         }
         /*int mesnum = 0;
         switch(mes){
@@ -531,7 +548,6 @@ public class Principal extends JFrame{
         }*/
 
         //String fecha = anyo + "-" + mesnum + "-" + dia;
-        String fecha = anyo + "-" + mes + "-" + dia;
         String puntuacionImdbMetacritic = "";
         String imagen = "";
 
@@ -573,9 +589,10 @@ public class Principal extends JFrame{
         tfPuntuacion.setEditable(false);
 
         cbEditarTipo.setVisible(false);
-        cbEditarAnyo.setVisible(false);
+        /*cbEditarAnyo.setVisible(false);
         cbEditarMes.setVisible(false);
-        cbEditarDia.setVisible(false);
+        cbEditarDia.setVisible(false);*/
+        pnCalendarioIndividual.setVisible(false);
 
         btCancelar.setVisible(false);
         btAceptar.setVisible(false);
@@ -603,6 +620,24 @@ public class Principal extends JFrame{
         @Override
         public boolean isCellEditable(int row, int column) {
             return false; // Todas las celdas son de solo lectura
+        }
+    }
+    class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+        private String datePattern = "yyyy-MM-dd";
+        private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+        @Override
+        public Object stringToValue(String text) throws ParseException {
+            return dateFormatter.parseObject(text);
+        }
+
+        @Override
+        public String valueToString(Object value) throws ParseException {
+            if (value != null) {
+                Calendar cal = (Calendar) value;
+                return dateFormatter.format(cal.getTime());
+            }
+            return "";
         }
     }
 }

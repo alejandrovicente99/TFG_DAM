@@ -1,6 +1,9 @@
 package ORM;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
+
 @Entity
 @Table (name="Libreria")
 public class Libreria {
@@ -10,7 +13,7 @@ public class Libreria {
     @Column (name="Tipo")
     private String tipo;
     @Column (name="Fecha fin")
-    private String fechaFin;
+    private Date fechaFin;
     @Column (name="Puntuacion")
     private double puntuacion;
     @Column (name="IMDB/Metacritic")
@@ -20,7 +23,7 @@ public class Libreria {
 
     public Libreria() {}
 
-    public Libreria(String nombre, String tipo, String fechaFin, double puntuacion, String imdbMetacritic, String imagen) {
+    public Libreria(String nombre, String tipo, Date fechaFin, double puntuacion, String imdbMetacritic, String imagen) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.fechaFin = fechaFin;
@@ -45,11 +48,11 @@ public class Libreria {
         this.tipo = tipo;
     }
 
-    public String getFechaFin() {
+    public Date getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(String fechaFin) {
+    public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
 
