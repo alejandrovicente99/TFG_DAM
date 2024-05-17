@@ -20,6 +20,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -89,25 +90,31 @@ public class Principal extends JFrame{
 
     private String nombreID;
     private Libreria libID = new Libreria();
+    private final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Principal(){
+    public Principal() {
         //LibreriaDataService l = new LibreriaDataService(session);
-        ArrayList<Libreria> listaLibrerias = l.readAll();
+        //ArrayList<Libreria> listaLibrerias = l.readAll();
+
 
         //Cargar calendatios
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
+        p.put("text.today", "Hoy");
+        p.put("text.month", "Mes");
+        p.put("text.year", "Año");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
+        JDatePanelImpl datePanel1 = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());
+
+
         pnCalendarioAnyadir.add(datePicker);
-        pnCalendarioAnyadir.add(datePicker);
+        pnCalendarioIndividual.add(datePicker1);
 
         //Inicio app
-        generarTablaHome(listaLibrerias);
+        generarTablaHome(l.readAll());
         generarTablaAnyadir();
         //No se usa -- cargarComboBox();
         cargarcbSearch();
@@ -182,7 +189,7 @@ public class Principal extends JFrame{
                 /*anyo = cbAnyadirAnyo.getSelectedItem().toString().trim();
                 mes = String.valueOf(cbAnyadirMes.getSelectedIndex()+1);
                 dia = cbAnyadirDia.getSelectedItem().toString().trim();*/
-                Date selectedDate = (Date) datePicker.getModel().getValue();
+                Date selectedDate = (Date) datePicker1.getModel().getValue();
 
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
@@ -376,7 +383,7 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("IMDB/Metacritic");
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), formatter.format(libreria.getFechaFin()), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
             modeloTabla.addRow(fila);
         }
 
@@ -406,7 +413,7 @@ public class Principal extends JFrame{
         modeloTabla.setRowCount(0);
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), formatter.format(libreria.getFechaFin()), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
             modeloTabla.addRow(fila);
         }
 
@@ -418,7 +425,7 @@ public class Principal extends JFrame{
         modeloTabla.setRowCount(0);
 
         for (Libreria libreria : listaLibrerias) {
-            Object[] fila = {libreria.getNombre(), libreria.getTipo(), libreria.getFechaFin(), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
+            Object[] fila = {libreria.getNombre(), libreria.getTipo(), formatter.format(libreria.getFechaFin()), libreria.getPuntuacion(), libreria.getImdbMetacritic()};
             modeloTabla.addRow(fila);
         }
 
@@ -441,11 +448,11 @@ public class Principal extends JFrame{
     }
     public void cargarCbAnyadirTipo(JComboBox model){
         model.removeAllItems();
-        List<String> tipos = l.readTipos();
-
-        model.setModel(new DefaultComboBoxModel(tipos.toArray()));
+        model.addItem("Videojuego");
+        model.addItem("Pelicula");
+        model.addItem("Serie");
     }
-    public void cargarCbFecha(JComboBox modelAnyo, JComboBox modelMes){
+    /*public void cargarCbFecha(JComboBox modelAnyo, JComboBox modelMes){
         modelAnyo.removeAllItems();
         modelMes.removeAllItems();
 
@@ -488,7 +495,7 @@ public class Principal extends JFrame{
         for(int i = 1; i < 29; i++){
             model.addItem(i);
         }
-    }
+    }*/
     public void cargarImagen(String imagen){
         pnImagen.removeAll();
 
@@ -576,7 +583,7 @@ public class Principal extends JFrame{
         tfEditarNombre.setText(registro.getNombre());
         laPuntuacion.setText("Puntuacion : ");
         tfPuntuacion.setText(String.valueOf(registro.getPuntuacion()));
-        laFecha.setText("Fecha : " + registro.getFechaFin());
+        laFecha.setText("Fecha : " + formatter.format(registro.getFechaFin()));
         laMetacritic.setText("Puntuacion en " + registro.getImdbMetacritic());
         laTipo.setText("Tipo : " + registro.getTipo());
         laRanking.setText("Ranking : " + l.ranking(registro));
@@ -623,7 +630,7 @@ public class Principal extends JFrame{
         }
     }
     class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-        private String datePattern = "yyyy-MM-dd";
+        private String datePattern = "dd-MM-yyyy";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
         @Override
