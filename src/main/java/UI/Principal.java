@@ -33,17 +33,27 @@ public class Principal extends JFrame{
     private final Extract_videogame em = new Extract_videogame();
 
     public JPanel panelMain;
+    private JPanel panelMenu;
     private JTabbedPane tab;
+    private JPanel home;
+    private JButton btTop;
     private JButton btHome;
+    private JScrollPane scrollPane;
     private JTable homeTable;
     private JTextField tfSearch;
     private JComboBox cbSearch;
+    private JPanel anyadir;
     private JButton btAnyadir;
     private JTextField tfAnyadirNombre;
     private JComboBox cbAnyadirTipo;
     private JTextField tfAnyadirPuntuacion;
+    private JPanel pnNombre;
+    private JPanel pnTipo;
+    private JPanel pnFecha;
+    private JPanel pnPuntuacion;
     private JTable tbAnyadir;
     private JButton btAceptarAnyadir;
+    private JPanel Individual;
     private JPanel pnImagen;
     private JLabel laNombre;
     private JLabel laTipo;
@@ -60,6 +70,11 @@ public class Principal extends JFrame{
     private JButton btCancelar;
     private JLabel laUpdate;
     private JButton btEliminar;
+    private JLabel la1;
+    private JLabel la2;
+    private JLabel la6;
+    private JLabel la7;
+    private JLabel la8;
     private JButton btCargarImagen;
     private JPanel pnCalendarioIndividual;
     private JPanel pnCalendarioAnyadir;
@@ -80,7 +95,6 @@ public class Principal extends JFrame{
 
         JDatePanelImpl datePanel1 = new JDatePanelImpl(model, p);
         JDatePickerImpl datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());
-
 
         pnCalendarioAnyadir.add(datePicker);
         pnCalendarioIndividual.add(datePicker1);
@@ -106,6 +120,7 @@ public class Principal extends JFrame{
                 actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString()));
                 limpiarAnyadir();
                 laAnyadir.setText("");
+                model.setValue(null);
             }
         });
 
@@ -135,6 +150,7 @@ public class Principal extends JFrame{
                     btCancelar.setVisible(false);
                     libID = session.get(Libreria.class, nombre);
                     nombreID = nombre;
+                    System.out.println(nombre);
                     laUpdate.setVisible(false);
                     tab.setSelectedIndex(2);
                 }
@@ -145,7 +161,7 @@ public class Principal extends JFrame{
         btAceptarAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre, tipo, anyo, mes, dia, fecha;
+                String nombre, tipo;
                 double puntuacion = 0;
 
                 laAnyadir.setText(null);
@@ -153,6 +169,7 @@ public class Principal extends JFrame{
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
                 Date selectedDate = (Date) datePicker1.getModel().getValue();
+                System.out.println(((Date) datePicker1.getModel().getValue()).toString());
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
                     laAnyadir.setText("La puntuacion no puede estar vacia");
@@ -185,7 +202,6 @@ public class Principal extends JFrame{
         btEditar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                nombreID = tfEditarNombre.getText().trim();
                 btCancelar.setVisible(true);
                 btAceptar.setVisible(true);
                 btEditar.setVisible(false);
@@ -194,14 +210,16 @@ public class Principal extends JFrame{
 
                 laFecha.setText("Fecha : ");
                 laTipo.setText("Tipo : ");
+                laPuntuacion.setText("Puntuacion : ");
+                laNombre.setText("Nombre : ");
 
                 tfEditarNombre.setText(libID.getNombre());
                 tfPuntuacion.setText(String.valueOf(libID.getPuntuacion()));
 
                 model.setValue(libID.getFechaFin());
 
-                tfEditarNombre.setEditable(true);
-                tfPuntuacion.setEditable(true);
+                tfEditarNombre.setVisible(true);
+                tfPuntuacion.setVisible(true);
 
                 pnCalendarioIndividual.setVisible(true);
                 cbEditarTipo.setVisible(true);
@@ -229,6 +247,7 @@ public class Principal extends JFrame{
                 String nombre = tfEditarNombre.getText().trim();
                 String tipo = cbEditarTipo.getSelectedItem().toString().trim();
                 Date fecha = (Date) datePicker.getModel().getValue();
+
                 double puntuacion = Double.parseDouble(tfPuntuacion.getText().toString().trim());
 
                 String puntuacionMetacritic = "";
@@ -284,15 +303,13 @@ public class Principal extends JFrame{
                 String puntuacion;
                 if(libNew.getTipo().equals("Videojuego")){
                     imagen = em.imagenSteamDB(nombreID);
-                    puntuacion = em.puntuacionMetacritic(nombreID);
+                    puntuacion = "Metacritic " + em.puntuacionMetacritic(nombreID);
+                    if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombreID);
                 }else{
                     imagen = ei.imagenImdb2(nombreID);
-                    puntuacion = ei.puntuacionIMDB(nombreID);
+                    puntuacion = "IMDB " + ei.puntuacionIMDB(nombreID);
                 }
 
-                if(imagen.endsWith(".webm")){
-                    imagen = ei.imagenImdb2(nombreID);
-                }
                 libNew.setImagen(imagen);
                 libNew.setImdbMetacritic(puntuacion);
                 l.update(libNew);
@@ -408,7 +425,7 @@ public class Principal extends JFrame{
     }
 
     public String anyadirDatos(String nombre, String tipo, Date fecha, double puntuacion){
-        if(nombre==null || nombre.isEmpty()) {
+        /*if(nombre==null || nombre.isEmpty()) {
             return "El nombre no puede estar vacio";
         }
         Libreria duplicado = session.get(Libreria.class, nombre);
@@ -421,23 +438,7 @@ public class Principal extends JFrame{
         if(fecha == null){
             return "La fecha no puede estar vacia";
         }
-        /*int mesnum = 0;
-        switch(mes){
-            case "Enero": mesnum = 1; break;
-            case "Febrero": mesnum = 2; break;
-            case "Marzo": mesnum = 3; break;
-            case "Abril": mesnum = 4; break;
-            case "Mayo": mesnum = 5; break;
-            case "Junio": mesnum = 6; break;
-            case "Julio": mesnum = 7; break;
-            case "Agosto": mesnum = 8; break;
-            case "Septiembre": mesnum = 9; break;
-            case "Octubre": mesnum = 10; break;
-            case "Noviembre": mesnum = 11; break;
-            case "Diciembre": mesnum = 12; break;
-        }*/
 
-        //String fecha = anyo + "-" + mesnum + "-" + dia;
         String puntuacionImdbMetacritic = "";
         String imagen = "";
 
@@ -448,9 +449,9 @@ public class Principal extends JFrame{
         }else{
             puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
             imagen = ei.imagenImdb2(nombre);
-        }
+        }*/
 
-        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionImdbMetacritic, imagen);
+        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, null, null);
 
         return l.Guardar(libreria);
     }
@@ -458,13 +459,12 @@ public class Principal extends JFrame{
         tfAnyadirNombre.setText("");
         tfAnyadirPuntuacion.setText("");
     }
+
     public void abrirIndividual(String nombre){
         Libreria registro = session.get(Libreria.class, nombre);
 
-        laNombre.setText("Nombre : ");
-        tfEditarNombre.setText(registro.getNombre());
-        laPuntuacion.setText("Puntuacion : ");
-        tfPuntuacion.setText(String.valueOf(registro.getPuntuacion()));
+        laNombre.setText("Nombre : " + registro.getNombre());
+        laPuntuacion.setText("Puntuacion : " + registro.getPuntuacion());
         laFecha.setText("Fecha : " + formatter.format(registro.getFechaFin()));
         laMetacritic.setText("Puntuacion en " + registro.getImdbMetacritic());
         laTipo.setText("Tipo : " + registro.getTipo());
@@ -474,8 +474,8 @@ public class Principal extends JFrame{
         laNombre.setVisible(true);
         laPuntuacion.setVisible(true);
 
-        tfEditarNombre.setEditable(false);
-        tfPuntuacion.setEditable(false);
+        tfEditarNombre.setVisible(false);
+        tfPuntuacion.setVisible(false);
 
         cbEditarTipo.setVisible(false);
         pnCalendarioIndividual.setVisible(false);

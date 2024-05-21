@@ -81,18 +81,6 @@ public class LibreriaDAOImpl implements LibreriaDAO {
     }
 
     @Override
-    public List<String> readTipos(Session session) {
-        try{
-            List<String> tipos = session.createQuery("Select distinct tipo from Libreria order by tipo asc").getResultList();
-
-            return tipos;
-        } catch (Exception ignored) {
-
-        }
-        return null;
-    }
-
-    @Override
     public ArrayList<Libreria> find(Session session, String cb, String tf) {
         String tipo = "";
         try{

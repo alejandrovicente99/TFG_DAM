@@ -10,7 +10,6 @@ public interface LibreriaDAO<T> {
     String delete(T entity, Session session);
     String update(T entity, Session session);
     ArrayList<T> readAll(Session session);
-    List<String> readTipos(Session session);
     ArrayList<T> find(Session session, String cb, String tf);
     ArrayList<T> findByType(Session session, String tipo);
     int ranking(T entity, Session session);

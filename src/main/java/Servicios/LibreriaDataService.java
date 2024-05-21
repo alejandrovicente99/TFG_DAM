@@ -2,53 +2,74 @@ package Servicios;
 
 import Implementacion.LibreriaDAOImpl;
 import ORM.Libreria;
-import Util.HibernateUtil;
-import org.hibernate.HibernateException;
+import Scrap.Extract_imdb;
+import Scrap.Extract_videogame;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
-
-import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LibreriaDataService {
     public LibreriaDataService(Session miSession) {this.miSession = miSession;}
+
     private Session miSession;
+
+    private final Extract_imdb ei = new Extract_imdb();
+    private final Extract_videogame em = new Extract_videogame();
+
     LibreriaDAOImpl l = new LibreriaDAOImpl();
+
     public String Guardar(Libreria libreria) {
-        /*if(libreria.getNombre() == null || libreria.getNombre().equals("")){
-            return "El nombre no puede ser vacio";
+        if(libreria.getNombre()==null || libreria.getNombre().isEmpty()) {
+            return "El nombre no puede estar vacio";
         }
-        if(libreria.getFechaFin() == null || libreria.getFechaFin().equals("")){
-            return "El fecha de fin no puede ser vacio";
-        }*/
+        Libreria duplicado = miSession.get(Libreria.class, libreria.getNombre());
+        if(duplicado!=null){
+            return "Ya existe un registro con ese nombre";
+        }
+        if(libreria.getTipo()==null || libreria.getTipo().isEmpty()){
+            return "El tipo no puede estar vacio";
+        }
+        if(libreria.getFechaFin() == null){
+            return "La fecha no puede estar vacia";
+        }
+
+        if(libreria.getTipo().equals("Videojuego")){
+            libreria.setImdbMetacritic("Metacritic : " + em.puntuacionMetacritic(libreria.getNombre()));
+            libreria.setImagen(em.imagenSteamDB(libreria.getNombre()));
+            if(libreria.getImagen().endsWith(".webm")) libreria.setImagen(ei.imagenImdb2(libreria.getNombre()));
+        }else{
+            libreria.setImdbMetacritic("Metacritic : " + ei.puntuacionIMDB(libreria.getNombre()));
+            libreria.setImagen(ei.imagenImdb2(libreria.getNombre()));
+        }
         l.create(libreria, miSession);
         return "Objeto añadido";
     }
+
     public ArrayList<Libreria> readAll(){
         return l.readAll(miSession);
     }
-    public List<String> readTipos(){
-        return l.readTipos(miSession);
-    }
+
     public ArrayList<Libreria> find(String cb, String tf){
         if(tf == null || tf.equals("")){
             return l.readAll(miSession);
         }
         return l.find(miSession, cb, tf);
     }
+
     public ArrayList<Libreria> findByType(String tipo){
         if(tipo == null || tipo.equals("")){
             return l.readAll(miSession);
         }
         return l.findByType(miSession, tipo);
     }
+
     public int ranking(Libreria lib){
         return l.ranking(lib, miSession);
     }
+
     public String update(Libreria libreria){
         return l.update(libreria, miSession);
     }
+
     public String delete(Libreria libreria){
         return l.delete(libreria, miSession);
     }
