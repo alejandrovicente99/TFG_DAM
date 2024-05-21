@@ -84,7 +84,7 @@ public class Principal extends JFrame{
     private final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public Principal() {
-        //Cargar calendatios
+        //Cargar calendarios
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
         p.put("text.today", "Hoy");
