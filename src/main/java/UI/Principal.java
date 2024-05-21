@@ -5,6 +5,7 @@ import Scrap.Extract_videogame;
 import Scrap.Extract_imdb;
 import Servicios.LibreriaDataService;
 import Util.HibernateUtil;
+
 import org.hibernate.Session;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -24,42 +25,25 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 public class Principal extends JFrame{
     private final Session session = HibernateUtil.getSessionFactory().openSession();
     private final LibreriaDataService l = new LibreriaDataService(session);
-    //private Scrap s = new Scrap();
-    //private Individual i = new Individual(session);
     private final Extract_imdb ei = new Extract_imdb();
     private final Extract_videogame em = new Extract_videogame();
 
-
     public JPanel panelMain;
-    private JPanel panelMenu;
     private JTabbedPane tab;
-    private JPanel home;
-    private JButton btTop;
     private JButton btHome;
-    private JScrollPane scrollPane;
     private JTable homeTable;
     private JTextField tfSearch;
     private JComboBox cbSearch;
-    private JPanel anyadir;
     private JButton btAnyadir;
     private JTextField tfAnyadirNombre;
     private JComboBox cbAnyadirTipo;
-    //private JComboBox cbAnyadirAnyo;
-    //private JComboBox cbAnyadirMes;
-    //private JComboBox cbAnyadirDia;
     private JTextField tfAnyadirPuntuacion;
-    private JPanel pnNombre;
-    private JPanel pnTipo;
-    private JPanel pnFecha;
-    private JPanel pnPuntuacion;
     private JTable tbAnyadir;
     private JButton btAceptarAnyadir;
-    private JPanel Individual;
     private JPanel pnImagen;
     private JLabel laNombre;
     private JLabel laTipo;
@@ -68,9 +52,6 @@ public class Principal extends JFrame{
     private JLabel laPuntuacion;
     private JLabel laRanking;
     private JLabel laAnyadir;
-    //private JComboBox cbEditarDia;
-    //private JComboBox cbEditarMes;
-    //private JComboBox cbEditarAnyo;
     private JComboBox cbEditarTipo;
     private JTextField tfPuntuacion;
     private JTextField tfEditarNombre;
@@ -79,11 +60,6 @@ public class Principal extends JFrame{
     private JButton btCancelar;
     private JLabel laUpdate;
     private JButton btEliminar;
-    private JLabel la1;
-    private JLabel la2;
-    private JLabel la6;
-    private JLabel la7;
-    private JLabel la8;
     private JButton btCargarImagen;
     private JPanel pnCalendarioIndividual;
     private JPanel pnCalendarioAnyadir;
@@ -93,10 +69,6 @@ public class Principal extends JFrame{
     private final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public Principal() {
-        //LibreriaDataService l = new LibreriaDataService(session);
-        //ArrayList<Libreria> listaLibrerias = l.readAll();
-
-
         //Cargar calendatios
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
@@ -116,14 +88,8 @@ public class Principal extends JFrame{
         //Inicio app
         generarTablaHome(l.readAll());
         generarTablaAnyadir();
-        //No se usa -- cargarComboBox();
         cargarcbSearch();
-        //cargarCbFecha(cbAnyadirAnyo, cbAnyadirMes);
-        //cargarCbFecha(cbEditarAnyo, cbEditarMes);
-        //cargarDia31(cbAnyadirDia);
-        //cargarDia31(cbEditarDia);
         cargarCbAnyadirTipo(cbAnyadirTipo);
-        // no se usa -- cargarTodasImagenes()
 
         //boton abrir pestañas
         btHome.addActionListener(new ActionListener() {
@@ -186,11 +152,7 @@ public class Principal extends JFrame{
 
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
-                /*anyo = cbAnyadirAnyo.getSelectedItem().toString().trim();
-                mes = String.valueOf(cbAnyadirMes.getSelectedIndex()+1);
-                dia = cbAnyadirDia.getSelectedItem().toString().trim();*/
                 Date selectedDate = (Date) datePicker1.getModel().getValue();
-
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
                     laAnyadir.setText("La puntuacion no puede estar vacia");
@@ -212,12 +174,6 @@ public class Principal extends JFrame{
                 }
             }
         });
-        /*cbAnyadirMes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cargarCbDia(cbAnyadirMes.getSelectedItem().toString(), cbAnyadirDia);
-            }
-        });*/
         cbAnyadirTipo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -229,16 +185,6 @@ public class Principal extends JFrame{
         btEditar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*String fecha = libID.getFechaFin();
-
-                String[] partes = fecha.split("-");
-
-                String anyo = partes[0];
-                String mes = partes[1];
-                String dia = partes[2];
-
-                System.out.println(anyo + " " + mes + " " + dia);*/
-
                 nombreID = tfEditarNombre.getText().trim();
                 btCancelar.setVisible(true);
                 btAceptar.setVisible(true);
@@ -252,18 +198,11 @@ public class Principal extends JFrame{
                 tfEditarNombre.setText(libID.getNombre());
                 tfPuntuacion.setText(String.valueOf(libID.getPuntuacion()));
 
-                /*cbEditarAnyo.setSelectedItem(anyo);
-                cbEditarMes.setSelectedItem(mes);
-                cargarCbDia(mes, cbEditarDia);
-                cbEditarDia.setSelectedItem(dia);*/
                 model.setValue(libID.getFechaFin());
 
                 tfEditarNombre.setEditable(true);
                 tfPuntuacion.setEditable(true);
 
-                /*cbEditarDia.setVisible(true);
-                cbEditarMes.setVisible(true);
-                cbEditarAnyo.setVisible(true);*/
                 pnCalendarioIndividual.setVisible(true);
                 cbEditarTipo.setVisible(true);
                 cargarCbAnyadirTipo(cbEditarTipo);
@@ -272,8 +211,6 @@ public class Principal extends JFrame{
         btCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //En principio no se usa libID = session.get(Libreria.class, nombreID);
-
                 btCancelar.setVisible(false);
                 btAceptar.setVisible(false);
                 btEditar.setVisible(true);
@@ -291,11 +228,7 @@ public class Principal extends JFrame{
 
                 String nombre = tfEditarNombre.getText().trim();
                 String tipo = cbEditarTipo.getSelectedItem().toString().trim();
-                //String fecha = cbEditarAnyo.getSelectedItem().toString().trim() + "-" + (cbEditarMes.getSelectedIndex() + 1) + "-" + cbEditarDia.getSelectedItem().toString().trim();
                 Date fecha = (Date) datePicker.getModel().getValue();
-                /*String anyo = cbEditarAnyo.getSelectedItem().toString().trim();
-                String mes = cbEditarMes.getSelectedItem().toString().trim();
-                String dia = cbEditarDia.getSelectedItem().toString().trim();*/
                 double puntuacion = Double.parseDouble(tfPuntuacion.getText().toString().trim());
 
                 String puntuacionMetacritic = "";
@@ -431,12 +364,6 @@ public class Principal extends JFrame{
 
         modeloTabla.fireTableDataChanged();
     }
-    /*public void cargarComboBox(){
-        //LibreriaDataService l = new LibreriaDataService(session);
-        List<String> tipos = l.readTipos();
-
-        //cbSearch.setModel(new DefaultComboBoxModel(tipos.toArray()));
-    }*/
 
     //Cargar datos
     public void cargarcbSearch(){
@@ -452,50 +379,6 @@ public class Principal extends JFrame{
         model.addItem("Pelicula");
         model.addItem("Serie");
     }
-    /*public void cargarCbFecha(JComboBox modelAnyo, JComboBox modelMes){
-        modelAnyo.removeAllItems();
-        modelMes.removeAllItems();
-
-        for(int i = 2024; i >= 2000; i--){
-            modelAnyo.addItem(i);
-        }
-        String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-        modelMes.setModel(new DefaultComboBoxModel(meses));
-    }
-    public void cargarCbDia(String mes, JComboBox model){
-        switch(mes){
-            case "Enero": cargarDia31(model); break;
-            case "Febrero": cargarDiaFebrero(model); break;
-            case "Marzo": cargarDia31(model); break;
-            case "Abril": cargarDia30(model); break;
-            case "Mayo": cargarDia31(model); break;
-            case "Junio": cargarDia30(model); break;
-            case "Julio": cargarDia31(model); break;
-            case "Agosto": cargarDia31(model); break;
-            case "Septiembre": cargarDia30(model); break;
-            case "Octubre": cargarDia31(model); break;
-            case "Noviembre": cargarDia30(model); break;
-            case "Diciembre": cargarDia31(model); break;
-        }
-    }
-    public void cargarDia30(JComboBox model){
-        model.removeAllItems();
-        for(int i = 1; i < 31; i++){
-            model.addItem(i);
-        }
-    }
-    public void cargarDia31(JComboBox model){
-        model.removeAllItems();
-        for(int i = 1; i < 32; i++){
-            model.addItem(i);
-        }
-    }
-    public void cargarDiaFebrero(JComboBox model){
-        model.removeAllItems();
-        for(int i = 1; i < 29; i++){
-            model.addItem(i);
-        }
-    }*/
     public void cargarImagen(String imagen){
         pnImagen.removeAll();
 
@@ -576,9 +459,8 @@ public class Principal extends JFrame{
         tfAnyadirPuntuacion.setText("");
     }
     public void abrirIndividual(String nombre){
-        //En principio no lo usare ArrayList<Libreria> dato = l.find("Nombre", nombre);
         Libreria registro = session.get(Libreria.class, nombre);
-        // En principio no lo usare Libreria registro = dato.get(0);
+
         laNombre.setText("Nombre : ");
         tfEditarNombre.setText(registro.getNombre());
         laPuntuacion.setText("Puntuacion : ");
@@ -596,9 +478,6 @@ public class Principal extends JFrame{
         tfPuntuacion.setEditable(false);
 
         cbEditarTipo.setVisible(false);
-        /*cbEditarAnyo.setVisible(false);
-        cbEditarMes.setVisible(false);
-        cbEditarDia.setVisible(false);*/
         pnCalendarioIndividual.setVisible(false);
 
         btCancelar.setVisible(false);
@@ -606,23 +485,7 @@ public class Principal extends JFrame{
         btEditar.setVisible(true);
         btEliminar.setVisible(true);
     }
-    //No se usa --
-    /*public void cargarTodasImagenes(){
-        ArrayList<Libreria> libreria = l.readAll();
-        String imagen = "";
-        for(Libreria lib : libreria){
-            imagen = "";
 
-            if(lib.getTipo().equals("Videojuego")){
-
-            }else{
-                imagen = ei.imagenImdb2(lib.getNombre());
-            }
-
-            lib.setImagen(imagen);
-            l.update(lib);
-        }
-    }*/
     class ReadOnlyTableModel extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
