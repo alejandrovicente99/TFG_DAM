@@ -205,6 +205,7 @@ public class Principal extends JFrame{
                 btCancelar.setVisible(true);
                 btAceptar.setVisible(true);
                 btEditar.setVisible(false);
+                btCargarImagen.setVisible(false);
                 btEliminar.setVisible(false);
                 laUpdate.setVisible(false);
 
@@ -231,6 +232,7 @@ public class Principal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 btCancelar.setVisible(false);
                 btAceptar.setVisible(false);
+                btCargarImagen.setVisible(true);
                 btEditar.setVisible(true);
                 btEliminar.setVisible(true);
                 laUpdate.setVisible(false);
@@ -303,11 +305,11 @@ public class Principal extends JFrame{
                 String puntuacion;
                 if(libNew.getTipo().equals("Videojuego")){
                     imagen = em.imagenSteamDB(nombreID);
-                    puntuacion = "Metacritic " + em.puntuacionMetacritic(nombreID);
+                    puntuacion = "Metacritic : " + em.puntuacionMetacritic(nombreID);
                     if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombreID);
                 }else{
                     imagen = ei.imagenImdb2(nombreID);
-                    puntuacion = "IMDB " + ei.puntuacionIMDB(nombreID);
+                    puntuacion = "IMDB : " + ei.puntuacionIMDB(nombreID);
                 }
 
                 libNew.setImagen(imagen);
@@ -425,32 +427,6 @@ public class Principal extends JFrame{
     }
 
     public String anyadirDatos(String nombre, String tipo, Date fecha, double puntuacion){
-        /*if(nombre==null || nombre.isEmpty()) {
-            return "El nombre no puede estar vacio";
-        }
-        Libreria duplicado = session.get(Libreria.class, nombre);
-        if(duplicado!=null){
-            return "Ya existe un registro con ese nombre";
-        }
-        if(tipo==null || tipo.isEmpty()){
-            return "El tipo no puede estar vacio";
-        }
-        if(fecha == null){
-            return "La fecha no puede estar vacia";
-        }
-
-        String puntuacionImdbMetacritic = "";
-        String imagen = "";
-
-        if(tipo.equals("Videojuego")){
-            puntuacionImdbMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
-            imagen = em.imagenSteamDB(nombre);
-            if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombre);
-        }else{
-            puntuacionImdbMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
-            imagen = ei.imagenImdb2(nombre);
-        }*/
-
         Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, null, null);
 
         return l.Guardar(libreria);
@@ -484,6 +460,7 @@ public class Principal extends JFrame{
         btAceptar.setVisible(false);
         btEditar.setVisible(true);
         btEliminar.setVisible(true);
+        btCargarImagen.setVisible(true);
     }
 
     class ReadOnlyTableModel extends DefaultTableModel {

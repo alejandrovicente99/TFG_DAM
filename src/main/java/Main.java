@@ -1,13 +1,13 @@
-import UI.Principal;
+import UI.Login;
 import javax.swing.*;
 import java.text.ParseException;
 
 public class Main {
     public static void main(String[] args) {
-        Principal login = new Principal();
+        Login login = new Login();
         login.setContentPane(login.panelMain);
-        login.setTitle("Libreria");
-        login.setSize(960, 540);
+        login.setTitle("Login");
+        login.setSize(350, 200);
         login.setLocationRelativeTo(null);
         login.setVisible(true);
         login.setResizable(false);
