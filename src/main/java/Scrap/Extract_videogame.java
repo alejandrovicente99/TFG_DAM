@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class Extract_videogame {
     public Extract_videogame(){};
 
-    public String puntuacionMetacritic(String nombre){
+    /*public String puntuacionMetacritic(String nombre){
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchMetacriticLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -45,17 +45,24 @@ public class Extract_videogame {
             e.printStackTrace();
         }
         return null;
+    }*/
+    public static String puntuacionMetacritic(String nombre) {
+        try {
+            String metacriticLink = searchMetacriticLink(nombre);
+            if (metacriticLink != null) {
+                Document doc = Jsoup.connect("https" + metacriticLink).get();
+                Element ratingElement = doc.selectFirst("span[data-v-4cdca868]");
+                if (ratingElement != null) {
+                    double puntuacion = (double) Integer.parseInt(ratingElement.text().trim()) / 10;
+                    return String.valueOf(puntuacion);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    /*public static void main(String[] args) {
-        String gameTitle = "silksong"; // Título del videojuego a buscar
-        String metacriticLink = searchMetacriticLink(gameTitle);
-        if (metacriticLink != null) {
-            System.out.println("Enlace a Metacritic: " + metacriticLink);
-        } else {
-            System.out.println("No se encontró un enlace a Metacritic para el videojuego '" + gameTitle + "'.");
-        }
-    }*/
 
     public static String searchMetacriticLink(String gameTitle) {
         try {
@@ -91,12 +98,8 @@ public class Extract_videogame {
     public String imagenSteamDB(String nombre){
         try {
             Document doc = Jsoup.connect("https" + searchSteamDBLink(nombre)).get();
-
             Element metaElement = doc.select("meta[property=og:image]").first();
-
             String imgUrl = metaElement.attr("content");
-
-            System.out.println("Imagen : " + imgUrl);
 
             return imgUrl;
 
@@ -137,6 +140,5 @@ public class Extract_videogame {
             return googleSearchResultLink.substring(start);
         }
     }
-
 }
 

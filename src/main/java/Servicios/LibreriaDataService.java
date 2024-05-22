@@ -37,7 +37,7 @@ public class LibreriaDataService {
             libreria.setImagen(em.imagenSteamDB(libreria.getNombre()));
             if(libreria.getImagen().endsWith(".webm")) libreria.setImagen(ei.imagenImdb2(libreria.getNombre()));
         }else{
-            libreria.setImdbMetacritic("Metacritic : " + ei.puntuacionIMDB(libreria.getNombre()));
+            libreria.setImdbMetacritic("IMDB : " + ei.puntuacionIMDB(libreria.getNombre()));
             libreria.setImagen(ei.imagenImdb2(libreria.getNombre()));
         }
         l.create(libreria, miSession);

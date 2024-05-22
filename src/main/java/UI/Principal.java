@@ -169,7 +169,6 @@ public class Principal extends JFrame{
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
                 Date selectedDate = (Date) datePicker1.getModel().getValue();
-                System.out.println(((Date) datePicker1.getModel().getValue()).toString());
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
                     laAnyadir.setText("La puntuacion no puede estar vacia");
@@ -178,7 +177,7 @@ public class Principal extends JFrame{
                         puntuacion = Double.parseDouble(tfAnyadirPuntuacion.getText().trim());
 
                         if(puntuacion <= 10 || puntuacion >= 0) {
-                            laAnyadir.setText(anyadirDatos(nombre, tipo, selectedDate, puntuacion));
+                            laAnyadir.setText(l.Guardar(new Libreria(nombre, tipo, selectedDate, puntuacion, null, null)));
                             limpiarAnyadir();
                             actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                         }else{
@@ -426,11 +425,6 @@ public class Principal extends JFrame{
         }
     }
 
-    public String anyadirDatos(String nombre, String tipo, Date fecha, double puntuacion){
-        Libreria libreria = new Libreria(nombre, tipo, fecha, puntuacion, null, null);
-
-        return l.Guardar(libreria);
-    }
     public void limpiarAnyadir(){
         tfAnyadirNombre.setText("");
         tfAnyadirPuntuacion.setText("");

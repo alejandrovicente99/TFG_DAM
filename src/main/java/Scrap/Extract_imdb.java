@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class Extract_imdb {
     public Extract_imdb(){};
 
-    public String puntuacionIMDB(String nombre){
+    /*public String puntuacionIMDB(String nombre){
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchImdbLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -42,6 +42,21 @@ public class Extract_imdb {
                 }
             } else {
                 return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }*/
+    public static String puntuacionIMDB(String nombre) {
+        try {
+            String imdbLink = searchImdbLink(nombre);
+            if (imdbLink != null) {
+                Document doc = Jsoup.connect("https" + imdbLink).get();
+                Element ratingElement = doc.selectFirst("span.sc-bde20123-1.cMEQkK");
+                if (ratingElement != null) {
+                    return ratingElement.text();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,7 +95,7 @@ public class Extract_imdb {
         }
     }
 
-    public String imagenImdb1(String nombre){
+    /*public String imagenImdb1(String nombre){
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https" + searchImdbLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -115,9 +130,25 @@ public class Extract_imdb {
             throw new RuntimeException(e);
         }
         return null;
+    }*/
+    public static String imagenImdb1(String nombre) {
+        try {
+            String imdbLink = searchImdbLink(nombre);
+            if (imdbLink != null) {
+                Document doc = Jsoup.connect("https" + imdbLink).get();
+                Elements imageElements = doc.select("a.ipc-lockup-overlay");
+                if (!imageElements.isEmpty()) {
+                    String enlace = imageElements.first().attr("href");
+                    return "https://www.imdb.com" + enlace;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public String imagenImdb2(String nombre) {
+    /*public String imagenImdb2(String nombre) {
         try {
             Document doc = Jsoup.connect(imagenImdb1(nombre)).get();
             Elements metaTags = doc.select("meta[property=og:image]");
@@ -127,6 +158,21 @@ public class Extract_imdb {
             }
             System.out.println("Enlace de la imagen: " + imageUrl);
             return imageUrl;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }*/
+    public static String imagenImdb2(String nombre) {
+        try {
+            String imagePageLink = imagenImdb1(nombre);
+            if (imagePageLink != null) {
+                Document doc = Jsoup.connect(imagePageLink).get();
+                Elements metaTags = doc.select("meta[property=og:image]");
+                if (!metaTags.isEmpty()) {
+                    return metaTags.first().attr("content");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
