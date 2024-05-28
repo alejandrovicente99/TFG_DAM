@@ -17,6 +17,7 @@ public class Extract_imdb {
     public Extract_imdb(){};
 
     public String puntuacionIMDB(String nombre){
+        if(isInternetAvailable()) return "NO CONEXION";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchImdbLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -49,7 +50,7 @@ public class Extract_imdb {
         return null;
     }
 
-    public static String searchImdbLink(String movieName) {
+    public String searchImdbLink(String movieName) {
         try {
             String searchQuery = URLEncoder.encode(movieName + " IMDb", "UTF-8");
             String url = "https://www.google.com/search?q=" + searchQuery;
@@ -118,6 +119,7 @@ public class Extract_imdb {
     }
 
     public String imagenImdb2(String nombre) {
+        if(isInternetAvailable()) return "NO CONEXION";
         try {
             Document doc = Jsoup.connect(imagenImdb1(nombre)).get();
             Elements metaTags = doc.select("meta[property=og:image]");
@@ -131,6 +133,19 @@ public class Extract_imdb {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean isInternetAvailable() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://www.google.com").openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(2000);
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            return responseCode == 200;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
 

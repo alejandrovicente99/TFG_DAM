@@ -40,8 +40,8 @@ public class LibreriaDataService {
             libreria.setImdbMetacritic("IMDB : " + ei.puntuacionIMDB(libreria.getNombre()));
             libreria.setImagen(ei.imagenImdb2(libreria.getNombre()));
         }
-        l.create(libreria, miSession);
-        return "Objeto añadido";
+
+        return l.create(libreria, miSession);
     }
 
     public ArrayList<Libreria> readAll(){

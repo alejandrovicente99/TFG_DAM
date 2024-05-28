@@ -18,6 +18,7 @@ public class Extract_videogame {
     public Extract_videogame(){};
 
     public String puntuacionMetacritic(String nombre){
+        if(isInternetAvailable()) return "NO CONEXION";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchMetacriticLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -79,6 +80,7 @@ public class Extract_videogame {
     }
 
     public String imagenSteamDB(String nombre){
+        if(isInternetAvailable()) return "NO CONEXION";
         try {
             Document doc = Jsoup.connect("https" + searchSteamDBLink(nombre)).get();
             Element metaElement = doc.select("meta[property=og:image]").first();
@@ -121,6 +123,19 @@ public class Extract_videogame {
             return googleSearchResultLink.substring(start, end);
         } else {
             return googleSearchResultLink.substring(start);
+        }
+    }
+
+    private boolean isInternetAvailable() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://www.google.com").openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(2000);
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            return responseCode == 200;
+        } catch (IOException e) {
+            return false;
         }
     }
 }

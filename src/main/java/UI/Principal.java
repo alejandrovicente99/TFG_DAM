@@ -21,6 +21,9 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,6 +85,8 @@ public class Principal extends JFrame{
     private String nombreID;
     private Libreria libID = new Libreria();
     private final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+    private boolean conexion = true;
 
     public Principal() {
         //Cargar calendarios
@@ -317,6 +322,41 @@ public class Principal extends JFrame{
                 abrirIndividual(libNew.getNombre());
             }
         });
+
+        //Hilo para comprobar conexion con BBDD
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (conexion) {
+                    try {
+                        Connection miSession = DriverManager.getConnection("jdbc:mysql://localhost:3306/Libreria?serverTimezone=Europe/Madrid","root", "");
+
+                        if (miSession != null) {
+                            miSession.close();
+                            panelMain.setEnabled(true);
+                        } else {
+                            System.out.println("Espera");
+                            Thread.sleep(1000);
+                            continue;
+                        }
+                    }catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }catch (NullPointerException e){
+                        continue;
+                    } catch (SQLException e) {
+                        JOptionPane.showMessageDialog(null, "Error de conexion con la base de datos");
+                        panelMain.setEnabled(false);
+                        continue;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 
     //Generar tablas
