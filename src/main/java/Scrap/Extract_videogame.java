@@ -18,7 +18,7 @@ public class Extract_videogame {
     public Extract_videogame(){};
 
     public String puntuacionMetacritic(String nombre){
-        if(isInternetAvailable()) return "NO CONEXION";
+        if(!isInternetAvailable()) return "NO CONEXION";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchMetacriticLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -80,7 +80,7 @@ public class Extract_videogame {
     }
 
     public String imagenSteamDB(String nombre){
-        if(isInternetAvailable()) return "NO CONEXION";
+        if(!isInternetAvailable()) return "NO CONEXION";
         try {
             Document doc = Jsoup.connect("https" + searchSteamDBLink(nombre)).get();
             Element metaElement = doc.select("meta[property=og:image]").first();

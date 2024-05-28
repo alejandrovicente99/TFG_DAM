@@ -166,7 +166,7 @@ public class Principal extends JFrame{
         btAceptarAnyadir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre, tipo;
+                String nombre, tipo, laAnyadirTEXT;
                 double puntuacion = 0;
 
                 laAnyadir.setText(null);
@@ -176,13 +176,20 @@ public class Principal extends JFrame{
                 Date selectedDate = (Date) datePicker1.getModel().getValue();
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
+                    laAnyadir.setForeground(Color.red);
                     laAnyadir.setText("La puntuacion no puede estar vacia");
                 }else {
                     try {
                         puntuacion = Double.parseDouble(tfAnyadirPuntuacion.getText().trim());
 
                         if(puntuacion <= 10 || puntuacion >= 0) {
-                            laAnyadir.setText(l.Guardar(new Libreria(nombre, tipo, selectedDate, puntuacion, null, null)));
+                            laAnyadirTEXT = l.Guardar(new Libreria(nombre, tipo, selectedDate, puntuacion, null, null));
+                            laAnyadir.setText(laAnyadirTEXT);
+                            if(laAnyadirTEXT.equals("Registro ingresado en BBDD")){
+                                laAnyadir.setForeground(Color.green);
+                            }else{
+                                laAnyadir.setForeground(Color.red);
+                            }
                             limpiarAnyadir();
                             actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                         }else{
@@ -497,13 +504,13 @@ public class Principal extends JFrame{
         btCargarImagen.setVisible(true);
     }
 
-    class ReadOnlyTableModel extends DefaultTableModel {
+    static class ReadOnlyTableModel extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false; // Todas las celdas son de solo lectura
         }
     }
-    class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+    static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private String datePattern = "dd-MM-yyyy";
         private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 

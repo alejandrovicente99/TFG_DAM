@@ -17,7 +17,7 @@ public class Extract_imdb {
     public Extract_imdb(){};
 
     public String puntuacionIMDB(String nombre){
-        if(isInternetAvailable()) return "NO CONEXION";
+        if(!isInternetAvailable()) return "NO CONEXION";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https"+searchImdbLink(nombre)).openConnection();
             connection.setRequestMethod("GET");
@@ -119,7 +119,7 @@ public class Extract_imdb {
     }
 
     public String imagenImdb2(String nombre) {
-        if(isInternetAvailable()) return "NO CONEXION";
+        if(!isInternetAvailable()) return "NO CONEXION";
         try {
             Document doc = Jsoup.connect(imagenImdb1(nombre)).get();
             Elements metaTags = doc.select("meta[property=og:image]");

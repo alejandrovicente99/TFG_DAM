@@ -3,7 +3,8 @@ import javax.swing.*;
 import java.text.ParseException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         Login login = new Login();
         login.setContentPane(login.panelMain);
         login.setTitle("Login");
