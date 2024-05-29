@@ -109,6 +109,7 @@ public class Principal extends JFrame{
         generarTablaAnyadir();
         cargarcbSearch();
         cargarCbAnyadirTipo(cbAnyadirTipo);
+        cargarCbAnyadirTipo(cbEditarTipo);
 
         //boton abrir pestañas
         btHome.addActionListener(new ActionListener() {
@@ -155,7 +156,6 @@ public class Principal extends JFrame{
                     btCancelar.setVisible(false);
                     libID = session.get(Libreria.class, nombre);
                     nombreID = nombre;
-                    System.out.println(nombre);
                     laUpdate.setVisible(false);
                     tab.setSelectedIndex(2);
                 }
@@ -235,7 +235,7 @@ public class Principal extends JFrame{
 
                 pnCalendarioIndividual.setVisible(true);
                 cbEditarTipo.setVisible(true);
-                cargarCbAnyadirTipo(cbEditarTipo);
+                cbEditarTipo.setSelectedItem(libID.getTipo());
             }
         });
         btCancelar.addActionListener(new ActionListener() {
@@ -272,9 +272,15 @@ public class Principal extends JFrame{
                     Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, libID.getImdbMetacritic(), libID.getImagen());
                     update = l.update(libUpdate);
                     laUpdate.setText(update);
+                    if(update.trim().equals("Registro actualizado")) {
+                        laUpdate.setForeground(Color.green);
+                    }else{
+                        laUpdate.setForeground(Color.red);
+                    }
                     abrirIndividual(libUpdate.getNombre());
                 } else {
                     if(libNEW != null){
+                        laUpdate.setForeground(Color.red);
                         laUpdate.setText("Ya existe un registro con ese nombre");
                         abrirIndividual(nombreID);
                     } else {
@@ -290,6 +296,11 @@ public class Principal extends JFrame{
 
                         Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionMetacritic, imagen);
                         update = update + l.update(libUpdate);
+                        if(update.trim().equals("Registro actualizado")) {
+                            laUpdate.setForeground(Color.green);
+                        }else{
+                            laUpdate.setForeground(Color.red);
+                        }
                         laUpdate.setText(update);
                         abrirIndividual(libUpdate.getNombre());
                     }
@@ -336,7 +347,7 @@ public class Principal extends JFrame{
             public void run() {
                 while (conexion) {
                     try {
-                        Connection miSession = DriverManager.getConnection("jdbc:mysql://localhost:3306/Libreria?serverTimezone=Europe/Madrid","root", "");
+                        Connection miSession = DriverManager.getConnection("jdbc:mysql://localhost:3306/Libreria?serverTimezone=Europe/Madrid", "root", "");
 
                         if (miSession != null) {
                             miSession.close();
