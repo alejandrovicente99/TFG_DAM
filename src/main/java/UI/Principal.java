@@ -39,7 +39,6 @@ public class Principal extends JFrame{
     private JPanel panelMenu;
     private JTabbedPane tab;
     private JPanel home;
-    private JButton btTop;
     private JButton btHome;
     private JScrollPane scrollPane;
     private JTable homeTable;
@@ -81,6 +80,7 @@ public class Principal extends JFrame{
     private JButton btCargarImagen;
     private JPanel pnCalendarioIndividual;
     private JPanel pnCalendarioAnyadir;
+    private JLabel laBBDD;
 
     private String nombreID;
     private Libreria libID = new Libreria();
@@ -168,8 +168,6 @@ public class Principal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String nombre, tipo, laAnyadirTEXT;
                 double puntuacion = 0;
-
-                laAnyadir.setText(null);
 
                 nombre = tfAnyadirNombre.getText().trim();
                 tipo = cbAnyadirTipo.getSelectedItem().toString().trim();
@@ -303,6 +301,8 @@ public class Principal extends JFrame{
                         }
                         laUpdate.setText(update);
                         abrirIndividual(libUpdate.getNombre());
+                        nombreID = libUpdate.getNombre();
+                        libID = libUpdate;
                     }
                 }
             }
@@ -351,7 +351,9 @@ public class Principal extends JFrame{
 
                         if (miSession != null) {
                             miSession.close();
-                            panelMain.setEnabled(true);
+                            laBBDD.setForeground(Color.green);
+                            laBBDD.setText("BBDD: ON");
+                            habilitarApp(true);
                         } else {
                             System.out.println("Espera");
                             Thread.sleep(1000);
@@ -362,8 +364,10 @@ public class Principal extends JFrame{
                     }catch (NullPointerException e){
                         continue;
                     } catch (SQLException e) {
-                        JOptionPane.showMessageDialog(null, "Error de conexion con la base de datos");
-                        panelMain.setEnabled(false);
+                        laBBDD.setForeground(Color.red);
+                        laBBDD.setText("BBDD: OFF");
+                        habilitarApp(false);
+                        tab.setSelectedIndex(0);
                         continue;
                     }
                     try {
@@ -460,27 +464,47 @@ public class Principal extends JFrame{
 
         Image image = null;
         URL url = null;
+        JLabel laImagen = new JLabel();
 
-        try {
-            url = new URL(imagen);
-            image = ImageIO.read(url);
-            Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(scaledImage);
-            JLabel laImagen = new JLabel(icon);
-
-            Border bordeBlanco = BorderFactory.createLineBorder(Color.WHITE, 5);
-            Border bordeExistente = laImagen.getBorder();
-            Border bordeCompuesto = new CompoundBorder(bordeExistente, bordeBlanco);
-            laImagen.setBorder(bordeCompuesto);
-
+        /*if(imagen.equals("NO CONEXION")){
+            laImagen.setText("Error de conexion, no se puede mostrar la imagen");
+            laImagen.setForeground(Color.red);
             pnImagen.add(laImagen);
             pnImagen.setAlignmentX(0);
             pnImagen.setAlignmentY(0);
-        } catch (MalformedURLException ex) {
-            System.out.println("Malformed URL");
-        } catch (IOException iox) {
-            System.out.println("Can not load file");
-        }
+        }else {*/
+            try {
+                url = new URL(imagen);
+                image = ImageIO.read(url);
+                Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(scaledImage);
+                //JLabel laImagen = new JLabel(icon);
+                laImagen.setIcon(icon);
+
+                Border bordeBlanco = BorderFactory.createLineBorder(Color.WHITE, 5);
+                Border bordeExistente = laImagen.getBorder();
+                Border bordeCompuesto = new CompoundBorder(bordeExistente, bordeBlanco);
+                laImagen.setBorder(bordeCompuesto);
+
+                pnImagen.add(laImagen);
+                pnImagen.setAlignmentX(0);
+                pnImagen.setAlignmentY(0);
+            } catch (MalformedURLException ex) {
+                System.out.println("Malformed URL");
+                laImagen.setText("Error de conexion, no se puede mostrar la imagen");
+                laImagen.setForeground(Color.red);
+                pnImagen.add(laImagen);
+                pnImagen.setAlignmentX(0);
+                pnImagen.setAlignmentY(0);
+            } catch (IOException iox) {
+                System.out.println("Can not load file");
+                laImagen.setText("Error de conexion, no se puede mostrar la imagen");
+                laImagen.setForeground(Color.red);
+                pnImagen.add(laImagen);
+                pnImagen.setAlignmentX(0);
+                pnImagen.setAlignmentY(0);
+            }
+        //}
     }
 
     public void limpiarAnyadir(){
@@ -489,6 +513,8 @@ public class Principal extends JFrame{
     }
 
     public void abrirIndividual(String nombre){
+        laUpdate.setText("");
+
         Libreria registro = session.get(Libreria.class, nombre);
 
         laNombre.setText("Nombre : " + registro.getNombre());
@@ -538,5 +564,13 @@ public class Principal extends JFrame{
             }
             return "";
         }
+    }
+
+    public void habilitarApp(boolean a){
+        btHome.setEnabled(a);
+        btAnyadir.setEnabled(a);
+        homeTable.setEnabled(a);
+        cbSearch.setEnabled(a);
+        tfSearch.setEnabled(a);
     }
 }

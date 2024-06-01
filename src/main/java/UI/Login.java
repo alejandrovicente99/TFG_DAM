@@ -6,6 +6,8 @@ import org.hibernate.Session;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Login extends JFrame{
     public JPanel panelMain;
@@ -42,6 +44,22 @@ public class Login extends JFrame{
                 }catch (ExceptionInInitializerError ex){
                     JOptionPane.showMessageDialog(Login.this, "Error al conectarse a la BBDD", "Error", JOptionPane.ERROR_MESSAGE);
                     dispose();
+                }
+            }
+        });
+        tfUser.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    tfPassword.requestFocus();
+                }
+            }
+        });
+        tfPassword.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    btLogin.doClick();
                 }
             }
         });
