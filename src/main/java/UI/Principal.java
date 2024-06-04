@@ -185,11 +185,13 @@ public class Principal extends JFrame{
                             laAnyadir.setText(laAnyadirTEXT);
                             if(laAnyadirTEXT.equals("Registro ingresado en BBDD")){
                                 laAnyadir.setForeground(Color.green);
+                                limpiarAnyadir();
+                                actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                             }else{
                                 laAnyadir.setForeground(Color.red);
                             }
-                            limpiarAnyadir();
-                            actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
+                            //limpiarAnyadir();
+                            //actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                         }else{
                             laAnyadir.setText("La puntuacion debe ser mayor que 0 y menor que 10");
                         }
@@ -258,52 +260,61 @@ public class Principal extends JFrame{
                 String nombre = tfEditarNombre.getText().trim();
                 String tipo = cbEditarTipo.getSelectedItem().toString().trim();
                 Date fecha = (Date) datePicker.getModel().getValue();
+                try {
+                    double puntuacion = Double.parseDouble(tfPuntuacion.getText().toString().trim());
 
-                double puntuacion = Double.parseDouble(tfPuntuacion.getText().toString().trim());
-
-                String puntuacionMetacritic = "";
-                String imagen = "";
-
-                Libreria libNEW = session.get(Libreria.class, nombre);
-
-                if(nombre.equals(nombreID)){
-                    Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, libID.getImdbMetacritic(), libID.getImagen());
-                    update = l.update(libUpdate);
-                    laUpdate.setText(update);
-                    if(update.trim().equals("Registro actualizado")) {
-                        laUpdate.setForeground(Color.green);
-                    }else{
+                    if(puntuacion > 10 || puntuacion < 0){
                         laUpdate.setForeground(Color.red);
-                    }
-                    abrirIndividual(libUpdate.getNombre());
-                } else {
-                    if(libNEW != null){
-                        laUpdate.setForeground(Color.red);
-                        laUpdate.setText("Ya existe un registro con ese nombre");
-                        abrirIndividual(nombreID);
+                        laUpdate.setText("La puntuacion debe ser mayor que 0 y menor que 10");
                     } else {
-                        l.delete(libID);
-                        if (tipo.equals("Videojuego")) {
-                            puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
-                            imagen = em.imagenSteamDB(nombre);
-                            if(imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombre);
-                        } else {
-                            puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
-                            imagen = ei.imagenImdb2(nombre);
-                        }
+                        String puntuacionMetacritic = "";
+                        String imagen = "";
 
-                        Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionMetacritic, imagen);
-                        update = update + l.update(libUpdate);
-                        if(update.trim().equals("Registro actualizado")) {
-                            laUpdate.setForeground(Color.green);
-                        }else{
-                            laUpdate.setForeground(Color.red);
+                        Libreria libNEW = session.get(Libreria.class, nombre);
+
+                        if (nombre.equals(nombreID)) {
+                            Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, libID.getImdbMetacritic(), libID.getImagen());
+                            update = l.update(libUpdate);
+                            laUpdate.setText(update);
+                            if (update.trim().equals("Registro actualizado")) {
+                                laUpdate.setForeground(Color.green);
+                            } else {
+                                laUpdate.setForeground(Color.red);
+                            }
+                            abrirIndividual(libUpdate.getNombre());
+                        } else {
+                            if (libNEW != null) {
+                                laUpdate.setForeground(Color.red);
+                                laUpdate.setText("Ya existe un registro con ese nombre");
+                                abrirIndividual(nombreID);
+                            } else {
+                                l.delete(libID);
+                                if (tipo.equals("Videojuego")) {
+                                    puntuacionMetacritic = "Metacritic : " + em.puntuacionMetacritic(nombre);
+                                    imagen = em.imagenSteamDB(nombre);
+                                    if (imagen.endsWith(".webm")) imagen = ei.imagenImdb2(nombre);
+                                } else {
+                                    puntuacionMetacritic = "IMDB : " + ei.puntuacionIMDB(nombre);
+                                    imagen = ei.imagenImdb2(nombre);
+                                }
+
+                                Libreria libUpdate = new Libreria(nombre, tipo, fecha, puntuacion, puntuacionMetacritic, imagen);
+                                update = update + l.update(libUpdate);
+                                if (update.trim().equals("Registro actualizado")) {
+                                    laUpdate.setForeground(Color.green);
+                                } else {
+                                    laUpdate.setForeground(Color.red);
+                                }
+                                laUpdate.setText(update);
+                                abrirIndividual(libUpdate.getNombre());
+                                nombreID = libUpdate.getNombre();
+                                libID = libUpdate;
+                            }
                         }
-                        laUpdate.setText(update);
-                        abrirIndividual(libUpdate.getNombre());
-                        nombreID = libUpdate.getNombre();
-                        libID = libUpdate;
                     }
+                } catch (NumberFormatException ex){
+                laUpdate.setForeground(Color.red);
+                laUpdate.setText("Error en la puntuacion");
                 }
             }
         });
@@ -337,6 +348,7 @@ public class Principal extends JFrame{
                 libNew.setImagen(imagen);
                 libNew.setImdbMetacritic(puntuacion);
                 l.update(libNew);
+
                 abrirIndividual(libNew.getNombre());
             }
         });
