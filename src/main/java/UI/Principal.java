@@ -266,6 +266,9 @@ public class Principal extends JFrame{
                     if(puntuacion > 10 || puntuacion < 0){
                         laUpdate.setForeground(Color.red);
                         laUpdate.setText("La puntuacion debe ser mayor que 0 y menor que 10");
+                    } else if(nombre==null || nombre.equals("")) {
+                        laUpdate.setForeground(Color.red);
+                        laUpdate.setText("El nombre no puede estar vacio");
                     } else {
                         String puntuacionMetacritic = "";
                         String imagen = "";
