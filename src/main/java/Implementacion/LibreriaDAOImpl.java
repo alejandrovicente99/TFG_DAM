@@ -87,9 +87,8 @@ public class LibreriaDAOImpl implements LibreriaDAO {
             switch(cb){
                 case "Nombre": tipo = "nombre";break;
                 case "Tipo": tipo = "tipo";break;
-                case "Fecha fin": tipo = "fechaFin";break;
-                case "Puntuacion": tipo = "puntuacion";break;
             }
+
             Query query = session.createQuery("FROM Libreria  WHERE " + tipo + " LIKE :tf");
             query.setParameter("tf", "%" + tf + "%");
             List<Libreria> libreria = query.list();

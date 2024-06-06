@@ -19,17 +19,17 @@ public class LibreriaDataService {
 
     public String Guardar(Libreria libreria) {
         if(libreria.getNombre()==null || libreria.getNombre().isEmpty()) {
-            return "El nombre no puede estar vacio";
+            return "El nombre no puede estar vacío";
         }
         Libreria duplicado = miSession.get(Libreria.class, libreria.getNombre());
         if(duplicado!=null){
             return "Ya existe un registro con ese nombre";
         }
         if(libreria.getTipo()==null || libreria.getTipo().isEmpty()){
-            return "El tipo no puede estar vacio";
+            return "El tipo no puede estar vacío";
         }
         if(libreria.getFechaFin() == null){
-            return "La fecha no puede estar vacia";
+            return "La fecha no puede estar vacía";
         }
 
         if(libreria.getTipo().equals("Videojuego")){

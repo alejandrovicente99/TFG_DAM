@@ -174,7 +174,7 @@ public class Principal extends JFrame{
 
                 if(tfAnyadirPuntuacion.getText().trim()==null || tfAnyadirPuntuacion.getText().trim().equals("")){
                     laAnyadir.setForeground(Color.red);
-                    laAnyadir.setText("La puntuacion no puede estar vacia");
+                    laAnyadir.setText("La puntuación no puede estar vacía");
                 }else {
                     try {
                         puntuacion = Double.parseDouble(tfAnyadirPuntuacion.getText().trim());
@@ -189,13 +189,11 @@ public class Principal extends JFrame{
                             }else{
                                 laAnyadir.setForeground(Color.red);
                             }
-                            //limpiarAnyadir();
-                            //actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
                         }else{
-                            laAnyadir.setText("La puntuacion debe ser mayor que 0 y menor que 10");
+                            laAnyadir.setText("La puntuación debe ser mayor que 0 y menor que 10");
                         }
                     } catch (NumberFormatException ex){
-                        laAnyadir.setText("La puntuacion debe ser un valor numerico, y los decimales se ponen con un punto (.)");
+                        laAnyadir.setText("La puntuación debe ser un valor numérico, y los decimales se ponen con un punto (.)");
                         tfAnyadirPuntuacion.setText(null);
                     }
                 }
@@ -221,7 +219,7 @@ public class Principal extends JFrame{
 
                 laFecha.setText("Fecha : ");
                 laTipo.setText("Tipo : ");
-                laPuntuacion.setText("Puntuacion : ");
+                laPuntuacion.setText("Puntuación : ");
                 laNombre.setText("Nombre : ");
 
                 tfEditarNombre.setText(libID.getNombre());
@@ -264,10 +262,10 @@ public class Principal extends JFrame{
 
                     if(puntuacion > 10 || puntuacion < 0){
                         laUpdate.setForeground(Color.red);
-                        laUpdate.setText("La puntuacion debe ser mayor que 0 y menor que 10");
+                        laUpdate.setText("La puntuación debe ser mayor que 0 y menor que 10");
                     } else if(nombre==null || nombre.equals("")) {
                         laUpdate.setForeground(Color.red);
-                        laUpdate.setText("El nombre no puede estar vacio");
+                        laUpdate.setText("El nombre no puede estar vacío");
                     } else {
                         String puntuacionMetacritic = "";
                         String imagen = "";
@@ -316,7 +314,7 @@ public class Principal extends JFrame{
                     }
                 } catch (NumberFormatException ex){
                 laUpdate.setForeground(Color.red);
-                laUpdate.setText("Error en la puntuacion");
+                laUpdate.setText("Error en la puntuación");
                 }
             }
         });
@@ -408,7 +406,7 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Nombre");
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha Fin");
-        modeloTabla.addColumn("Puntuacion");
+        modeloTabla.addColumn("Puntuación");
         modeloTabla.addColumn("IMDB/Metacritic");
 
         for (Libreria libreria : listaLibrerias) {
@@ -428,7 +426,7 @@ public class Principal extends JFrame{
         modeloTabla.addColumn("Nombre");
         modeloTabla.addColumn("Tipo");
         modeloTabla.addColumn("Fecha Fin");
-        modeloTabla.addColumn("Puntuacion");
+        modeloTabla.addColumn("Puntuación");
         modeloTabla.addColumn("IMDB/Metacritic");
 
         modeloTabla.fireTableDataChanged();
@@ -466,13 +464,11 @@ public class Principal extends JFrame{
         cbSearch.removeAllItems();
         cbSearch.addItem("Nombre");
         cbSearch.addItem("Tipo");
-        cbSearch.addItem("Fecha fin");
-        cbSearch.addItem("Puntuacion");
     }
     public void cargarCbAnyadirTipo(JComboBox model){
         model.removeAllItems();
         model.addItem("Videojuego");
-        model.addItem("Pelicula");
+        model.addItem("Película");
         model.addItem("Serie");
     }
     public void cargarImagen(String imagen){
@@ -482,43 +478,29 @@ public class Principal extends JFrame{
         URL url = null;
         JLabel laImagen = new JLabel();
 
-        /*if(imagen.equals("NO CONEXION")){
-            laImagen.setText("Error de conexion, no se puede mostrar la imagen");
+        try {
+            url = new URL(imagen);
+            image = ImageIO.read(url);
+            Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaledImage);
+            laImagen.setIcon(icon);
+
+            Border bordeBlanco = BorderFactory.createLineBorder(Color.WHITE, 5);
+            Border bordeExistente = laImagen.getBorder();
+            Border bordeCompuesto = new CompoundBorder(bordeExistente, bordeBlanco);
+            laImagen.setBorder(bordeCompuesto);
+
+            pnImagen.add(laImagen);
+            pnImagen.setAlignmentX(0);
+            pnImagen.setAlignmentY(0);
+        } catch (IOException iox) {
+            laImagen.setText("Error de conexión, no se puede mostrar la imagen");
             laImagen.setForeground(Color.red);
             pnImagen.add(laImagen);
             pnImagen.setAlignmentX(0);
             pnImagen.setAlignmentY(0);
-        }else {*/
-            try {
-                url = new URL(imagen);
-                image = ImageIO.read(url);
-                Image scaledImage = image.getScaledInstance(300, 450, Image.SCALE_SMOOTH);
-                ImageIcon icon = new ImageIcon(scaledImage);
-                //JLabel laImagen = new JLabel(icon);
-                laImagen.setIcon(icon);
+        }
 
-                Border bordeBlanco = BorderFactory.createLineBorder(Color.WHITE, 5);
-                Border bordeExistente = laImagen.getBorder();
-                Border bordeCompuesto = new CompoundBorder(bordeExistente, bordeBlanco);
-                laImagen.setBorder(bordeCompuesto);
-
-                pnImagen.add(laImagen);
-                pnImagen.setAlignmentX(0);
-                pnImagen.setAlignmentY(0);
-            } catch (MalformedURLException ex) {
-                laImagen.setText("Error de conexion, no se puede mostrar la imagen");
-                laImagen.setForeground(Color.red);
-                pnImagen.add(laImagen);
-                pnImagen.setAlignmentX(0);
-                pnImagen.setAlignmentY(0);
-            } catch (IOException iox) {
-                laImagen.setText("Error de conexion, no se puede mostrar la imagen");
-                laImagen.setForeground(Color.red);
-                pnImagen.add(laImagen);
-                pnImagen.setAlignmentX(0);
-                pnImagen.setAlignmentY(0);
-            }
-        //}
     }
 
     public void limpiarAnyadir(){
@@ -532,9 +514,9 @@ public class Principal extends JFrame{
         Libreria registro = session.get(Libreria.class, nombre);
 
         laNombre.setText("Nombre : " + registro.getNombre());
-        laPuntuacion.setText("Puntuacion : " + registro.getPuntuacion());
+        laPuntuacion.setText("Puntuación : " + registro.getPuntuacion());
         laFecha.setText("Fecha : " + formatter.format(registro.getFechaFin()));
-        laMetacritic.setText("Puntuacion en " + registro.getImdbMetacritic());
+        laMetacritic.setText("Puntuación en " + registro.getImdbMetacritic());
         laTipo.setText("Tipo : " + registro.getTipo());
         laRanking.setText("Ranking : " + l.ranking(registro));
         cargarImagen(registro.getImagen());
