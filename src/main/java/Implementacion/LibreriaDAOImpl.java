@@ -90,8 +90,8 @@ public class LibreriaDAOImpl implements LibreriaDAO {
                 case "Fecha fin": tipo = "fechaFin";break;
                 case "Puntuacion": tipo = "puntuacion";break;
             }
-            Query query = session.createQuery("FROM Libreria  WHERE " + tipo + " = :tf");
-            query.setParameter("tf", tf);
+            Query query = session.createQuery("FROM Libreria  WHERE " + tipo + " LIKE :tf");
+            query.setParameter("tf", "%" + tf + "%");
             List<Libreria> libreria = query.list();
             ArrayList<Libreria> librerias = new ArrayList<>(libreria);
 
