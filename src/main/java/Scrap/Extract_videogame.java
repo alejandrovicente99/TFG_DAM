@@ -106,7 +106,6 @@ public class Extract_videogame {
                 Element linkElement = result.selectFirst("a[href]");
                 String link = linkElement.attr("href");
                 if (link.contains("steamgriddb.com")) {
-                    System.out.println("Enlace steamdb : "+ extractSteamDBLink(link));
                     return extractSteamDBLink(link);
                 }
             }

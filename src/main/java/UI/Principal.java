@@ -182,7 +182,7 @@ public class Principal extends JFrame{
                         if(puntuacion <= 10 || puntuacion >= 0) {
                             laAnyadirTEXT = l.Guardar(new Libreria(nombre, tipo, selectedDate, puntuacion, null, null));
                             laAnyadir.setText(laAnyadirTEXT);
-                            if(laAnyadirTEXT.equals("Registro ingresado en BBDD")){
+                            if(laAnyadirTEXT.equals("Registro ingresado en la BBDD")){
                                 laAnyadir.setForeground(Color.green);
                                 limpiarAnyadir();
                                 actualizarTablaAnyadir(l.findByType(cbAnyadirTipo.getSelectedItem().toString().trim()));
@@ -286,7 +286,7 @@ public class Principal extends JFrame{
                             if (libNEW != null) {
                                 laUpdate.setForeground(Color.red);
                                 laUpdate.setText("Ya existe un registro con ese nombre");
-                                abrirIndividual(nombreID);
+                                //abrirIndividual(nombreID);
                             } else {
                                 l.delete(libID);
                                 if (tipo.equals("Videojuego")) {
@@ -510,8 +510,6 @@ public class Principal extends JFrame{
     }
 
     public void abrirIndividual(String nombre){
-        laUpdate.setText("");
-
         Libreria registro = session.get(Libreria.class, nombre);
 
         laNombre.setText("Nombre : " + registro.getNombre());

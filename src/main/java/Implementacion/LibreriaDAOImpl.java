@@ -20,7 +20,7 @@ public class LibreriaDAOImpl implements LibreriaDAO {
             txn = session.beginTransaction();
             session.persist(entity);
             txn.commit();
-            linea = "Registro ingresado en BBDD";
+            linea = "Registro ingresado en la BBDD";
         }catch (HibernateException e){
             if(txn != null){
                 txn.rollback();

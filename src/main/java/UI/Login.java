@@ -28,7 +28,7 @@ public class Login extends JFrame{
                         if (tfPassword.getText().equals(pass)) {
                             Principal principal = new Principal();
                             principal.setContentPane(principal.panelMain);
-                            principal.setTitle("Libreria");
+                            principal.setTitle("Media Tracker");
                             principal.setSize(960, 540);
                             principal.setLocationRelativeTo(null);
                             principal.setVisible(true);
