@@ -464,6 +464,7 @@ public class Principal extends JFrame{
         cbSearch.removeAllItems();
         cbSearch.addItem("Nombre");
         cbSearch.addItem("Tipo");
+        cbSearch.addItem("Puntuación");
     }
     public void cargarCbAnyadirTipo(JComboBox model){
         model.removeAllItems();
