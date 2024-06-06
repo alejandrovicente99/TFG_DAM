@@ -74,7 +74,7 @@
               <background color="-13947600"/>
               <foreground color="-13027015"/>
               <opaque value="false"/>
-              <text value="Añadir"/>
+              <text value="Registrar"/>
             </properties>
           </component>
           <component id="3e4d6" class="javax.swing.JLabel" binding="laBBDD">

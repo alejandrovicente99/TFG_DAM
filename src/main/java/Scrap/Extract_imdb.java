@@ -1,6 +1,5 @@
 package Scrap;
 
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -103,7 +102,6 @@ public class Extract_imdb {
             Matcher matcher = pattern.matcher(htmlContent);
             if (matcher.find()) {
                 String enlace = matcher.group(1);
-                System.out.println("https://www.imdb.com" + enlace);
                 return "https://www.imdb.com" + enlace;
             } else {
                 System.out.println("No se encontró ningún enlace.");
@@ -127,7 +125,6 @@ public class Extract_imdb {
             for (Element metaTag : metaTags) {
                 imageUrl = metaTag.attr("content");
             }
-            System.out.println("Enlace de la imagen: " + imageUrl);
             return imageUrl;
         } catch (IOException e) {
             e.printStackTrace();

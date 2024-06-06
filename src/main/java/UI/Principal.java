@@ -353,6 +353,9 @@ public class Principal extends JFrame{
                 l.update(libNew);
 
                 abrirIndividual(libNew.getNombre());
+                laUpdate.setVisible(true);
+                laUpdate.setText("Cargado");
+                laUpdate.setForeground(Color.green);
             }
         });
 
@@ -370,7 +373,6 @@ public class Principal extends JFrame{
                             laBBDD.setText("BBDD: ON");
                             habilitarApp(true);
                         } else {
-                            System.out.println("Espera");
                             Thread.sleep(1000);
                             continue;
                         }
@@ -505,14 +507,12 @@ public class Principal extends JFrame{
                 pnImagen.setAlignmentX(0);
                 pnImagen.setAlignmentY(0);
             } catch (MalformedURLException ex) {
-                System.out.println("Malformed URL");
                 laImagen.setText("Error de conexion, no se puede mostrar la imagen");
                 laImagen.setForeground(Color.red);
                 pnImagen.add(laImagen);
                 pnImagen.setAlignmentX(0);
                 pnImagen.setAlignmentY(0);
             } catch (IOException iox) {
-                System.out.println("Can not load file");
                 laImagen.setText("Error de conexion, no se puede mostrar la imagen");
                 laImagen.setForeground(Color.red);
                 pnImagen.add(laImagen);
